@@ -17,15 +17,15 @@
 
         body {
             font-family: 'Noto Serif SC', 'Microsoft YaHei', serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #333;
+            background: linear-gradient(135deg, #f5f0e1 0%, #e6d3a7 100%); /* 竹黄色背景 */
+            color: #000000; /* 黑色字体 */
             min-height: 100vh;
             transition: background-color 0.3s, color 0.3s;
         }
 
         body.night-mode {
             background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-            color: #e0e0e0;
+            color: #ffffff; /* 白色字体 */
         }
 
         .container {
@@ -43,26 +43,35 @@
         h1 {
             font-size: 2.5rem;
             font-weight: 700;
-            color: white;
+            color: #8b4513; /* 深棕色 */
             text-shadow: 0 2px 4px rgba(0,0,0,0.2);
             margin-bottom: 10px;
         }
 
+        body.night-mode h1 {
+            color: #ffffff;
+            text-shadow: 0 2px 4px rgba(255,255,255,0.2);
+        }
+
         .subtitle {
             font-size: 1.1rem;
-            color: rgba(255, 255, 255, 0.9);
+            color: rgba(0, 0, 0, 0.9);
             font-weight: 300;
         }
 
+        body.night-mode .subtitle {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
         .upload-section {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(245, 240, 225, 0.95);
             padding: 40px;
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
             text-align: center;
             margin-bottom: 30px;
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(0, 0, 0, 0.1);
         }
 
         body.night-mode .upload-section {
@@ -98,24 +107,24 @@
         }
 
         .upload-hint {
-            color: #666;
+            color: #333333;
             font-size: 0.95rem;
             margin-top: 15px;
         }
 
         body.night-mode .upload-hint {
-            color: #aaa;
+            color: #aaaaaa;
         }
 
         .reader-section {
             display: none;
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(245, 240, 225, 0.95);
             padding: 40px;
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
             margin-bottom: 30px;
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(0, 0, 0, 0.1);
         }
 
         body.night-mode .reader-section {
@@ -129,7 +138,7 @@
             text-align: justify;
             white-space: pre-wrap;
             font-size: 1.1rem;
-            color: #333;
+            color: #000000;
         }
 
         body.night-mode .content {
@@ -155,7 +164,7 @@
             flex-wrap: wrap;
             gap: 15px;
             padding: 20px;
-            background: rgba(245, 245, 245, 0.8);
+            background: rgba(235, 230, 210, 0.8);
             border-radius: 12px;
             margin-top: 20px;
         }
@@ -188,14 +197,14 @@
         }
 
         .nav-buttons button:disabled {
-            background: #ccc;
+            background: #cccccc;
             cursor: not-allowed;
             transform: none;
             box-shadow: none;
         }
 
         body.night-mode .nav-buttons button:disabled {
-            background: #555;
+            background: #555555;
         }
 
         .setting-buttons button {
@@ -204,13 +213,13 @@
             border-radius: 8px;
             cursor: pointer;
             background: #f0f0f0;
-            color: #333;
+            color: #333333;
             font-weight: 500;
             transition: all 0.3s ease;
         }
 
         body.night-mode .setting-buttons button {
-            background: #555;
+            background: #555555;
             color: #e0e0e0;
         }
 
@@ -219,39 +228,39 @@
         }
 
         body.night-mode .setting-buttons button:hover {
-            background: #666;
+            background: #666666;
         }
 
         select {
             padding: 10px;
             border-radius: 8px;
-            border: 1px solid #ddd;
+            border: 1px solid #dddddd;
             background: white;
-            color: #333;
+            color: #333333;
             font-family: inherit;
         }
 
         body.night-mode select {
-            background: #444;
+            background: #444444;
             color: #e0e0e0;
-            border: 1px solid #666;
+            border: 1px solid #666666;
         }
 
         input[type="number"] {
             padding: 10px;
             border-radius: 8px;
-            border: 1px solid #ddd;
+            border: 1px solid #dddddd;
             width: 80px;
             background: white;
-            color: #333;
+            color: #333333;
             text-align: center;
             font-family: inherit;
         }
 
         body.night-mode input[type="number"] {
-            background: #444;
+            background: #444444;
             color: #e0e0e0;
-            border: 1px solid #666;
+            border: 1px solid #666666;
         }
 
         .pagination {
@@ -262,12 +271,12 @@
 
         .page-info {
             font-size: 1rem;
-            color: #666;
+            color: #333333;
             font-weight: 500;
         }
 
         body.night-mode .page-info {
-            color: #aaa;
+            color: #aaaaaa;
         }
 
         .chapter-title {
@@ -275,9 +284,9 @@
             font-size: 1.8rem;
             font-weight: 600;
             margin: 20px 0 30px 0;
-            color: #ff6b6b;
+            color: #8b4513;
             padding-bottom: 15px;
-            border-bottom: 2px solid #ff6b6b;
+            border-bottom: 2px solid #8b4513;
         }
 
         body.night-mode .chapter-title {
@@ -292,8 +301,8 @@
         .processing-info {
             text-align: center;
             padding: 40px;
-            color: #666;
-            background: rgba(255, 255, 255, 0.95);
+            color: #000000;
+            background: rgba(245, 240, 225, 0.95);
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
             margin-bottom: 30px;
@@ -302,7 +311,7 @@
 
         body.night-mode .processing-info {
             background: rgba(40, 40, 40, 0.95);
-            color: #aaa;
+            color: #aaaaaa;
         }
 
         .chapter-list-modal {
@@ -319,7 +328,7 @@
         }
 
         .chapter-list-content {
-            background: rgba(255, 255, 255, 0.98);
+            background: rgba(245, 240, 225, 0.98);
             border-radius: 15px;
             width: 90%;
             max-width: 600px;
@@ -336,7 +345,7 @@
 
         .chapter-list-header {
             padding: 20px;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -345,7 +354,7 @@
         }
 
         body.night-mode .chapter-list-header {
-            border-bottom: 1px solid #444;
+            border-bottom: 1px solid #444444;
         }
 
         .chapter-list-items {
@@ -356,14 +365,14 @@
 
         .chapter-list-item {
             padding: 15px 20px;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
             cursor: pointer;
             transition: all 0.2s ease;
             font-size: 1.05rem;
         }
 
         body.night-mode .chapter-list-item {
-            border-bottom: 1px solid #444;
+            border-bottom: 1px solid #444444;
         }
 
         .chapter-list-item:hover {
@@ -377,9 +386,9 @@
 
         .chapter-list-item.active {
             background-color: #fff5f5;
-            color: #ff6b6b;
+            color: #8b4513;
             font-weight: 600;
-            border-left: 4px solid #ff6b6b;
+            border-left: 4px solid #8b4513;
         }
 
         body.night-mode .chapter-list-item.active {
@@ -409,13 +418,13 @@
 
         /* 小说选择界面 */
         .book-selection {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(245, 240, 225, 0.95);
             padding: 40px;
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
             margin-bottom: 30px;
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(0, 0, 0, 0.1);
         }
 
         body.night-mode .book-selection {
@@ -431,24 +440,24 @@
         }
 
         .book-item {
-            background: rgba(240, 240, 240, 0.8);
+            background: rgba(235, 230, 210, 0.8);
             border-radius: 10px;
             padding: 20px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
-            border: 1px solid #ddd;
+            border: 1px solid #8b4513;
         }
 
         body.night-mode .book-item {
             background: rgba(60, 60, 60, 0.8);
-            border: 1px solid #555;
+            border: 1px solid #555555;
         }
 
         .book-item:hover {
             transform: translateY(-5px);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            background: rgba(230, 230, 230, 0.9);
+            background: rgba(225, 220, 200, 0.9);
         }
 
         body.night-mode .book-item:hover {
@@ -459,7 +468,7 @@
             font-size: 1.2rem;
             font-weight: 600;
             margin-bottom: 10px;
-            color: #333;
+            color: #000000;
         }
 
         body.night-mode .book-title {
@@ -468,21 +477,21 @@
 
         .book-info {
             font-size: 0.9rem;
-            color: #666;
+            color: #333333;
         }
 
         body.night-mode .book-info {
-            color: #aaa;
+            color: #aaaaaa;
         }
 
         .loading-books {
             text-align: center;
             padding: 40px;
-            color: #666;
+            color: #000000;
         }
 
         body.night-mode .loading-books {
-            color: #aaa;
+            color: #aaaaaa;
         }
 
         .back-to-books {
@@ -1023,27 +1032,31 @@
                 });
             }
             
-            // 加载小说列表
+            // 加载小说列表 - 使用GitHub API
             async loadBookList() {
                 try {
-                    // 获取GitHub仓库中的文件列表
-                    const response = await fetch('.');
-                    const html = await response.text();
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(html, 'text/html');
+                    // 获取当前页面的URL信息来确定仓库信息
+                    const path = window.location.pathname;
+                    const repoPath = path.split('/')[1]; // 获取仓库名
                     
-                    // 查找Book文件夹中的txt文件
-                    const links = doc.querySelectorAll('a');
+                    // 使用GitHub API获取Book文件夹中的文件
+                    const apiUrl = `https://api.github.com/repos/${window.location.hostname.split('.')[0]}/${repoPath}/contents/Book`;
+                    
+                    const response = await fetch(apiUrl);
+                    if (!response.ok) {
+                        throw new Error('无法访问GitHub API');
+                    }
+                    
+                    const files = await response.json();
                     const books = [];
                     
-                    links.forEach(link => {
-                        const href = link.getAttribute('href');
-                        if (href && href.startsWith('Book/') && href.endsWith('.txt')) {
-                            const fileName = href.split('/').pop();
+                    // 筛选出txt文件
+                    files.forEach(file => {
+                        if (file.name.endsWith('.txt')) {
                             books.push({
-                                name: fileName,
-                                url: href,
-                                title: fileName.replace('.txt', ''),
+                                name: file.name,
+                                url: file.download_url,
+                                title: file.name.replace('.txt', ''),
                                 author: '未知作者'
                             });
                         }
@@ -1052,6 +1065,43 @@
                     this.displayBookList(books);
                 } catch (error) {
                     console.error('加载小说列表时出错:', error);
+                    // 如果API访问失败，尝试直接访问文件
+                    this.loadBookListFallback();
+                }
+            }
+            
+            // 备用加载方法 - 直接尝试访问文件
+            async loadBookListFallback() {
+                try {
+                    // 尝试获取常见的小说文件
+                    const commonBooks = [
+                        '示例小说1.txt',
+                        '示例小说2.txt',
+                        '小说1.txt',
+                        '小说2.txt'
+                    ];
+                    
+                    const books = [];
+                    
+                    for (const bookName of commonBooks) {
+                        try {
+                            const response = await fetch(`Book/${bookName}`);
+                            if (response.ok) {
+                                books.push({
+                                    name: bookName,
+                                    url: `Book/${bookName}`,
+                                    title: bookName.replace('.txt', ''),
+                                    author: '未知作者'
+                                });
+                            }
+                        } catch (err) {
+                            // 文件不存在，跳过
+                        }
+                    }
+                    
+                    this.displayBookList(books);
+                } catch (error) {
+                    console.error('备用加载方法失败:', error);
                     this.loadingBooks.innerHTML = '<p>加载小说列表失败，请手动选择文件</p>';
                 }
             }
@@ -1061,7 +1111,7 @@
                 this.loadingBooks.style.display = 'none';
                 
                 if (books.length === 0) {
-                    this.bookList.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; color: #666;">暂无小说，请手动上传或检查Book文件夹</p>';
+                    this.bookList.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; color: #666666;">暂无小说，请手动上传或检查Book文件夹</p>';
                     return;
                 }
                 
@@ -1451,51 +1501,99 @@
             });
           }
           
-          // 扫描music文件夹中的音乐文件
+          // 扫描music文件夹中的音乐文件 - 使用GitHub API
           async scanMusicFolder() {
             try {
-              // 获取GitHub仓库中的文件列表
-              const response = await fetch('.');
-              const html = await response.text();
-              const parser = new DOMParser();
-              const doc = parser.parseFromString(html, 'text/html');
-              
-              // 查找music文件夹中的音乐文件
-              const links = doc.querySelectorAll('a');
-              const musicFiles = [];
-              
-              links.forEach(link => {
-                const href = link.getAttribute('href');
-                if (href && href.startsWith('music/') && (href.endsWith('.mp3') || href.endsWith('.flac'))) {
-                  const fileName = href.split('/').pop();
-                  musicFiles.push({
-                    name: fileName,
-                    url: href,
-                    title: fileName.replace(/\.[^/.]+$/, ""),
-                    artist: "未知艺术家"
-                  });
+                // 获取当前页面的URL信息来确定仓库信息
+                const path = window.location.pathname;
+                const repoPath = path.split('/')[1]; // 获取仓库名
+                
+                // 使用GitHub API获取music文件夹中的文件
+                const apiUrl = `https://api.github.com/repos/${window.location.hostname.split('.')[0]}/${repoPath}/contents/music`;
+                
+                const response = await fetch(apiUrl);
+                if (!response.ok) {
+                    throw new Error('无法访问GitHub API');
                 }
-              });
-              
-              // 添加音乐文件到播放列表
-              for (const file of musicFiles) {
-                this.playlist.push(file);
-              }
-              
-              // 更新播放列表显示
-              this.updatePlaylistDisplay();
-              
-              // 如果有音乐文件，加载第一首
-              if (this.playlist.length > 0) {
-                this.loadTrack(0);
-              } else {
-                this.songTitle.textContent = "未找到音乐文件";
-                this.songArtist.textContent = "请在music文件夹中添加音乐";
-              }
+                
+                const files = await response.json();
+                const musicFiles = [];
+                
+                // 筛选出音乐文件
+                files.forEach(file => {
+                    if (file.name.endsWith('.mp3') || file.name.endsWith('.flac')) {
+                        musicFiles.push({
+                            name: file.name,
+                            url: file.download_url,
+                            title: file.name.replace(/\.[^/.]+$/, ""),
+                            artist: "未知艺术家"
+                        });
+                    }
+                });
+                
+                // 添加音乐文件到播放列表
+                for (const file of musicFiles) {
+                    this.playlist.push(file);
+                }
+                
+                // 更新播放列表显示
+                this.updatePlaylistDisplay();
+                
+                // 如果有音乐文件，加载第一首
+                if (this.playlist.length > 0) {
+                    this.loadTrack(0);
+                } else {
+                    this.songTitle.textContent = "未找到音乐文件";
+                    this.songArtist.textContent = "请在music文件夹中添加音乐";
+                }
             } catch (error) {
-              console.error('扫描音乐文件夹时出错:', error);
-              this.songTitle.textContent = "音乐加载失败";
-              this.songArtist.textContent = "请检查网络连接";
+                console.error('扫描音乐文件夹时出错:', error);
+                // 如果API访问失败，尝试备用方法
+                this.scanMusicFolderFallback();
+            }
+          }
+          
+          // 备用音乐加载方法
+          async scanMusicFolderFallback() {
+            try {
+                // 尝试获取常见的音乐文件
+                const commonMusic = [
+                    'example1.mp3',
+                    'example2.mp3',
+                    'music1.mp3',
+                    'music2.mp3'
+                ];
+                
+                for (const musicName of commonMusic) {
+                    try {
+                        const response = await fetch(`music/${musicName}`);
+                        if (response.ok) {
+                            this.playlist.push({
+                                name: musicName,
+                                url: `music/${musicName}`,
+                                title: musicName.replace(/\.[^/.]+$/, ""),
+                                artist: "未知艺术家"
+                            });
+                        }
+                    } catch (err) {
+                        // 文件不存在，跳过
+                    }
+                }
+                
+                // 更新播放列表显示
+                this.updatePlaylistDisplay();
+                
+                // 如果有音乐文件，加载第一首
+                if (this.playlist.length > 0) {
+                    this.loadTrack(0);
+                } else {
+                    this.songTitle.textContent = "未找到音乐文件";
+                    this.songArtist.textContent = "请在music文件夹中添加音乐";
+                }
+            } catch (error) {
+                console.error('备用音乐加载方法失败:', error);
+                this.songTitle.textContent = "音乐加载失败";
+                this.songArtist.textContent = "请检查网络连接";
             }
           }
           
@@ -1564,16 +1662,35 @@
             try {
               // 构造歌词文件名（将音乐文件扩展名替换为.lrc）
               const lyricsFileName = track.name.replace(/\.[^/.]+$/, ".lrc");
-              const lyricsUrl = `music/${lyricsFileName}`;
               
-              const response = await fetch(lyricsUrl);
+              // 首先尝试通过GitHub API加载
+              const path = window.location.pathname;
+              const repoPath = path.split('/')[1];
+              const apiUrl = `https://api.github.com/repos/${window.location.hostname.split('.')[0]}/${repoPath}/contents/music/${lyricsFileName}`;
+              
+              const response = await fetch(apiUrl);
               if (response.ok) {
-                const lyricsText = await response.text();
-                this.parseLyrics(lyricsText);
-              } else {
-                this.lyricsData = [];
-                this.lyrics.textContent = "暂无歌词";
+                const fileData = await response.json();
+                const lyricsResponse = await fetch(fileData.download_url);
+                if (lyricsResponse.ok) {
+                  const lyricsText = await lyricsResponse.text();
+                  this.parseLyrics(lyricsText);
+                  return;
+                }
               }
+              
+              // 如果API失败，尝试直接访问
+              const directUrl = `music/${lyricsFileName}`;
+              const directResponse = await fetch(directUrl);
+              if (directResponse.ok) {
+                const lyricsText = await directResponse.text();
+                this.parseLyrics(lyricsText);
+                return;
+              }
+              
+              // 如果都失败了
+              this.lyricsData = [];
+              this.lyrics.textContent = "暂无歌词";
             } catch (error) {
               console.log('歌词加载失败:', error);
               this.lyricsData = [];
