@@ -226,6 +226,8 @@
             padding: 30px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             border: 1px solid rgba(0, 0, 0, 0.1);
+            max-height: 80vh;
+            overflow-y: auto;
         }
         
         body.night-mode .reader-container {
@@ -683,14 +685,6 @@
                 <div class="chapter-content" id="chapterContent">
                     <!-- 章节内容将通过JavaScript动态加载 -->
                 </div>
-                
-                <div class="pagination">
-                    <button id="prevPage">上一页</button>
-                    <div class="pagination-info">
-                        第 <span id="currentPageNum">1</span> 页 / 共 <span id="totalPages">1</span> 页
-                    </div>
-                    <button id="nextPage">下一页</button>
-                </div>
             </div>
         </div>
     </div>
@@ -767,8 +761,6 @@
             constructor() {
                 this.allChapters = []; // 存储所有章节
                 this.currentChapterIndex = 0; // 当前章节索引
-                this.currentPage = 0; // 当前页码（在当前章节内）
-                this.pageSize = 2000; // 每页字符数（可根据需要调整）
                 this.fontSize = 'medium';
                 this.isNightMode = false;
                 
@@ -789,12 +781,6 @@
                 // 章节导航按钮
                 this.prevChapter = document.getElementById('prevChapter');
                 this.nextChapter = document.getElementById('nextChapter');
-                
-                // 分页导航按钮
-                this.prevPage = document.getElementById('prevPage');
-                this.nextPage = document.getElementById('nextPage');
-                this.currentPageNum = document.getElementById('currentPageNum');
-                this.totalPages = document.getElementById('totalPages');
                 
                 // 内容显示区域
                 this.chapterList = document.getElementById('chapterList');
@@ -839,10 +825,6 @@
                 // 章节导航按钮
                 this.prevChapter.addEventListener('click', () => this.previousChapter());
                 this.nextChapter.addEventListener('click', () => this.nextChapterFunc());
-                
-                // 分页导航按钮
-                this.prevPage.addEventListener('click', () => this.previousPage());
-                this.nextPage.addEventListener('click', () => this.nextPageFunc());
             }
             
             applyTheme() {
@@ -862,6 +844,9 @@
                 };
                 
                 this.chapterContent.style.fontSize = sizes[this.fontSize];
+                this.chapterContent.style.lineHeight = this.fontSize === 'small' ? '1.6' : 
+                                                     this.fontSize === 'large' ? '2.0' : 
+                                                     this.fontSize === 'xlarge' ? '2.2' : '1.8';
             }
             
             // 初始化GitHub加载器
@@ -984,69 +969,63 @@
                 }
             }
             
-            // 解析章节内容
+            // 解析章节内容 - 关键改进：严格按照文件中的章节标记划分章节
             parseChapters(content) {
                 // 章节标题的正则表达式（支持多种格式）
                 const chapterRegex = /(第\s*[一二三四五六七八九十百千万\d]+\s*章[^\n]*)/g;
                 
-                // 分割内容，保留分隔符
-                const parts = content.split(chapterRegex);
+                // 使用正则表达式查找所有章节标题及其位置
+                const chapterMatches = [];
+                let match;
+                
+                while ((match = chapterRegex.exec(content)) !== null) {
+                    chapterMatches.push({
+                        title: match[1],
+                        startIndex: match.index
+                    });
+                }
                 
                 this.allChapters = [];
                 
-                // 如果第一个元素不是章节标题，则是前言或序章
-                if (parts.length > 0 && !chapterRegex.test(parts[0])) {
-                    const introContent = parts.shift();
-                    if (introContent.trim()) {
-                        this.allChapters.push({
-                            title: "序章",
-                            content: introContent.trim()
-                        });
+                // 如果没有找到章节标题，则将整个内容作为一个章节
+                if (chapterMatches.length === 0) {
+                    this.allChapters.push({
+                        title: "全文",
+                        content: content.trim()
+                    });
+                } else {
+                    // 处理序章（在第一个章节标题之前的内容）
+                    if (chapterMatches[0].startIndex > 0) {
+                        const introContent = content.substring(0, chapterMatches[0].startIndex).trim();
+                        if (introContent) {
+                            this.allChapters.push({
+                                title: "序章",
+                                content: introContent
+                            });
+                        }
                     }
-                }
-                
-                // 每两个元素组成一个章节（标题 + 内容）
-                for (let i = 0; i < parts.length; i += 2) {
-                    const title = parts[i].trim();
-                    const content = parts[i + 1] ? parts[i + 1].trim() : "";
                     
-                    if (title) {
+                    // 处理每个章节
+                    for (let i = 0; i < chapterMatches.length; i++) {
+                        const chapterStart = chapterMatches[i].startIndex;
+                        const chapterTitle = chapterMatches[i].title;
+                        
+                        // 确定章节结束位置
+                        const chapterEnd = i < chapterMatches.length - 1 
+                            ? chapterMatches[i + 1].startIndex 
+                            : content.length;
+                        
+                        // 提取章节内容（包括章节标题）
+                        const chapterContent = content.substring(chapterStart, chapterEnd).trim();
+                        
                         this.allChapters.push({
-                            title: title,
-                            content: content,
-                            // 将内容分页
-                            pages: this.paginateContent(content)
+                            title: chapterTitle,
+                            content: chapterContent
                         });
                     }
                 }
                 
                 this.renderChapterList();
-            }
-            
-            // 将章节内容分页
-            paginateContent(content) {
-                if (!content) return [''];
-                
-                const paragraphs = content.split('\n\n');
-                const pages = [];
-                let currentPage = '';
-                
-                for (const paragraph of paragraphs) {
-                    // 如果当前段落加入后超过页面大小，则保存当前页并开始新页
-                    if ((currentPage + '\n\n' + paragraph).length > this.pageSize && currentPage.length > 0) {
-                        pages.push(currentPage);
-                        currentPage = paragraph;
-                    } else {
-                        currentPage = currentPage ? currentPage + '\n\n' + paragraph : paragraph;
-                    }
-                }
-                
-                // 添加最后一页
-                if (currentPage) {
-                    pages.push(currentPage);
-                }
-                
-                return pages.length > 0 ? pages : [''];
             }
             
             // 渲染章节列表
@@ -1068,13 +1047,23 @@
                 if (index < 0 || index >= this.allChapters.length) return;
                 
                 this.currentChapterIndex = index;
-                this.currentPage = 0; // 重置到章节第一页
                 
                 const chapter = this.allChapters[index];
                 
                 // 更新标题和内容
                 this.currentChapterTitle.textContent = chapter.title;
-                this.updatePageContent();
+                
+                // 显示章节内容（保持原有的段落格式）
+                this.chapterContent.innerHTML = '';
+                const paragraphs = chapter.content.split('\n\n');
+                
+                paragraphs.forEach(paragraph => {
+                    if (paragraph.trim()) {
+                        const p = document.createElement('p');
+                        p.textContent = paragraph.trim();
+                        this.chapterContent.appendChild(p);
+                    }
+                });
                 
                 // 更新章节列表中的活动项
                 document.querySelectorAll('.chapter-item').forEach((item, i) => {
@@ -1089,33 +1078,7 @@
                 this.chapterJump.value = index + 1;
                 
                 // 滚动到顶部
-                window.scrollTo(0, 0);
-            }
-            
-            // 更新页面内容（处理分页）
-            updatePageContent() {
-                const chapter = this.allChapters[this.currentChapterIndex];
-                const pageContent = chapter.pages[this.currentPage] || '';
-                
-                // 将内容按段落分割并添加到页面
-                const paragraphs = pageContent.split('\n\n');
-                this.chapterContent.innerHTML = '';
-                
-                paragraphs.forEach(paragraph => {
-                    if (paragraph.trim()) {
-                        const p = document.createElement('p');
-                        p.textContent = paragraph.trim();
-                        this.chapterContent.appendChild(p);
-                    }
-                });
-                
-                // 更新分页信息
-                this.currentPageNum.textContent = this.currentPage + 1;
-                this.totalPages.textContent = chapter.pages.length;
-                
-                // 更新分页按钮状态
-                this.prevPage.disabled = (this.currentPage === 0);
-                this.nextPage.disabled = (this.currentPage === chapter.pages.length - 1);
+                this.chapterContent.scrollTop = 0;
             }
             
             // 上一章
@@ -1128,32 +1091,6 @@
             // 下一章
             nextChapterFunc() {
                 if (this.currentChapterIndex < this.allChapters.length - 1) {
-                    this.loadChapter(this.currentChapterIndex + 1);
-                }
-            }
-            
-            // 上一页
-            previousPage() {
-                if (this.currentPage > 0) {
-                    this.currentPage--;
-                    this.updatePageContent();
-                } else if (this.currentChapterIndex > 0) {
-                    // 如果是第一章的第一页，则跳转到上一章的最后一
-                    this.currentChapterIndex--;
-                    const chapter = this.allChapters[this.currentChapterIndex];
-                    this.currentPage = Math.max(0, chapter.pages.length - 1);
-                    this.loadChapter(this.currentChapterIndex);
-                }
-            }
-            
-            // 下一页
-            nextPageFunc() {
-                const chapter = this.allChapters[this.currentChapterIndex];
-                if (this.currentPage < chapter.pages.length - 1) {
-                    this.currentPage++;
-                    this.updatePageContent();
-                } else if (this.currentChapterIndex < this.allChapters.length - 1) {
-                    // 如果是当前章的最后一页，则跳转到下一章的第一页
                     this.loadChapter(this.currentChapterIndex + 1);
                 }
             }
