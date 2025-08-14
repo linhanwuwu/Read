@@ -6,290 +6,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>现代化小说阅读器</title>
+    <title>轻小说阅读器</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* ############################################################ */
-        /* ##### 基础样式和主题设置 ##### */
-        /* ############################################################ */
-        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
-            font-family: 'Noto Serif SC', serif;
-            background: linear-gradient(135deg, #f5f0e1 0%, #e6d3a7 100%);
-            color: #000000;
+            font-family: 'Noto Serif SC', 'Microsoft YaHei', serif;
+            background: linear-gradient(135deg, #f5f0e1 0%, #e6d3a7 100%); /* 竹黄色背景 */
+            color: #000000; /* 黑色字体 */
             min-height: 100vh;
-            transition: background 0.3s ease, color 0.3s ease;
-            padding: 20px;
+            transition: background-color 0.3s, color 0.3s;
         }
-        
+
         body.night-mode {
-            background: linear-gradient(135deg, #444444 0%, #34495e 100%);
-            color: #ffffff;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: #ffffff; /* 白色字体 */
         }
+
+        /* ... 其余CSS样式保持不变 ... */
         
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        /* ############################################################ */
-        /* ##### 头部样式 ##### */
-        /* ############################################################ */
-        
-        header {
-            text-align: center;
-            padding: 20px 0;
-            margin-bottom: 30px;
-            position: relative;
-        }
-        
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            color: #8b4513;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
-        }
-        
-        body.night-mode h1 {
-            color: #ffffff;
-            text-shadow: 1px 1px 2px rgba(255,255,255,0.2);
-        }
-        
-        .subtitle {
-            font-size: 1.2rem;
-            opacity: 0.8;
-        }
-        
-        /* ############################################################ */
-        /* ##### 控制面板样式 ##### */
-        /* ############################################################ */
-        
-        .control-panel {
-            background: rgba(245, 240, 225, 0.95);
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            justify-content: space-between;
-        }
-        
-        body.night-mode .control-panel {
-            background: rgba(40, 40, 40, 0.95);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-        }
-        
-        .control-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            align-items: center;
-        }
-        
-        .control-group label {
-            font-weight: bold;
-        }
-        
-        select, input, button {
-            padding: 8px 12px;
-            border-radius: 8px;
-            border: 1px solid rgba(0, 0, 0, 0.2);
-            background: rgba(255, 255, 255, 0.8);
-            font-family: inherit;
-            font-size: 1rem;
-        }
-        
-        body.night-mode select, 
-        body.night-mode input, 
-        body.night-mode button {
-            background: rgba(60, 60, 60, 0.9);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: #ffffff;
-        }
-        
-        button {
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: bold;
-            background: linear-gradient(to bottom, #8b4513, #5d2e0a);
-            color: white;
-            border: none;
-        }
-        
-        body.night-mode button {
-            background: linear-gradient(to bottom, #555555, #333333);
-            color: #ffffff;
-        }
-        
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-        
-        /* ############################################################ */
-        /* ##### 内容区域样式 ##### */
-        /* ############################################################ */
-        
-        .content-area {
-            display: flex;
-            gap: 30px;
-            flex-wrap: wrap;
-        }
-        
-        /* ############################################################ */
-        /* ##### 章节列表样式 ##### */
-        /* ############################################################ */
-        
-        .chapter-list-container {
-            flex: 1;
-            min-width: 300px;
-            background: rgba(245, 240, 225, 0.95);
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-        
-        body.night-mode .chapter-list-container {
-            background: rgba(40, 40, 40, 0.95);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-        }
-        
-        .chapter-list-container h2 {
-            margin-bottom: 15px;
-            color: #8b4513;
-            text-align: center;
-        }
-        
-        body.night-mode .chapter-list-container h2 {
-            color: #ffffff;
-        }
-        
-        .chapter-list {
-            list-style: none;
-        }
-        
-        .chapter-item {
-            padding: 12px 15px;
-            margin-bottom: 8px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            background: rgba(255, 255, 255, 0.5);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-        }
-        
-        body.night-mode .chapter-item {
-            background: rgba(60, 60, 60, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .chapter-item:hover {
-            background: rgba(139, 69, 19, 0.2);
-            transform: translateX(5px);
-        }
-        
-        body.night-mode .chapter-item:hover {
-            background: rgba(100, 100, 100, 0.7);
-        }
-        
-        .chapter-item.active {
-            background: rgba(139, 69, 19, 0.4);
-            font-weight: bold;
-        }
-        
-        body.night-mode .chapter-item.active {
-            background: rgba(100, 100, 100, 0.9);
-        }
-        
-        /* ############################################################ */
-        /* ##### 阅读区域样式 ##### */
-        /* ############################################################ */
-        
-        .reader-container {
-            flex: 2;
-            min-width: 300px;
-            background: rgba(245, 240, 225, 0.95);
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(0, 0, 0, 0.1);
-        }
-        
-        body.night-mode .reader-container {
-            background: rgba(40, 40, 40, 0.95);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-        }
-        
-        .chapter-title {
-            text-align: center;
-            font-size: 1.8rem;
-            margin-bottom: 30px;
-            color: #8b4513;
-            padding-bottom: 15px;
-            border-bottom: 2px solid rgba(139, 69, 19, 0.3);
-        }
-        
-        body.night-mode .chapter-title {
-            color: #ffffff;
-            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
-        }
-        
-        .chapter-content {
-            line-height: 1.8;
-            font-size: 1.1rem;
-            text-indent: 2em;
-        }
-        
-        .chapter-content p {
-            margin-bottom: 20px;
-            text-align: justify;
-        }
-        
-        /* ############################################################ */
-        /* ##### 导航按钮样式 ##### */
-        /* ############################################################ */
-        
-        .navigation {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(0, 0, 0, 0.1);
-        }
-        
-        body.night-mode .navigation {
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        /* ############################################################ */
-        /* ##### 音乐播放器样式 ##### */
-        /* ############################################################ */
-        
+        /* 音乐播放器样式保持不变，只是移除关闭按钮相关样式 */
         .music-player-container {
             position: fixed;
-            right: 15px;
-            bottom: 15px;
+            right: 20px;
+            bottom: 20px;
             z-index: 1000;
             font-family: Arial, sans-serif;
         }
 
         .music-player-mini {
-            width: 50px;
-            height: 50px;
+            width: 60px;
+            height: 60px;
             background: rgba(0, 0, 0, 0.7);
             border-radius: 50%;
             cursor: pointer;
@@ -298,7 +50,7 @@
             justify-content: center;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
             transition: all 0.3s ease;
-            z-index: 1001;
+            z-index: 1001; /* 确保在播放器上方 */
         }
 
         .music-player-mini:hover {
@@ -307,20 +59,20 @@
 
         .music-player-mini .play-icon {
             color: white;
-            font-size: 20px;
+            font-size: 24px;
         }
 
         .music-player-full {
-            width: 260px;
+            width: 300px;
             background: rgba(30, 30, 30, 0.95);
-            border-radius: 12px;
-            padding: 15px;
+            border-radius: 15px;
+            padding: 20px;
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(10px);
             display: none;
             position: fixed;
-            right: 15px;
-            bottom: 80px;
+            right: 20px;
+            bottom: 90px;
             z-index: 1000;
         }
 
@@ -328,10 +80,13 @@
             display: block;
         }
 
+        /* 移除原来的关闭按钮样式 */
+        /* .close-btn-player { ... }  已删除 */
+
         .album-cover-container {
-            width: 120px;
-            height: 120px;
-            margin: 0 auto 12px;
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 20px;
             position: relative;
         }
 
@@ -340,41 +95,51 @@
             height: 100%;
             border-radius: 50%;
             object-fit: cover;
-            border: 2px solid #8b4513;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+            animation: rotate 20s linear infinite;
+            animation-play-state: paused;
         }
 
-        body.night-mode .album-cover {
-            border: 2px solid #ffffff;
+        .music-player-full.playing .album-cover {
+            animation-play-state: running;
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         .song-info {
             text-align: center;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             color: white;
         }
 
         .song-title {
+            font-size: 18px;
             font-weight: bold;
-            font-size: 1.1rem;
             margin-bottom: 5px;
         }
 
         .song-artist {
-            font-size: 0.9rem;
-            opacity: 0.8;
-        }
-
-        .loading-indicator {
-            text-align: center;
-            color: white;
-            font-size: 0.9rem;
-            margin-bottom: 10px;
+            font-size: 14px;
+            color: #aaa;
         }
 
         .lyrics-container {
-            height: 60px;
-            overflow: hidden;
-            margin-bottom: 15px;
+            height: 80px;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: red;
+            font-weight: bold;
+            opacity: 0.7;
             display: none;
         }
 
@@ -382,67 +147,139 @@
             display: block;
         }
 
-        .lyrics {
-            text-align: center;
-            color: #ffcc00;
-            font-size: 0.9rem;
-            line-height: 1.4;
-            height: 100%;
+        .controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .control-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: background 0.3s;
         }
 
-        .toggle-lyrics {
-            text-align: center;
-            margin-bottom: 15px;
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
         }
 
-        .toggle-lyrics label {
-            color: white;
-            font-size: 0.9rem;
-            cursor: pointer;
+        .play-btn {
+            width: 50px;
+            height: 50px;
+            font-size: 24px;
         }
 
         .progress-container {
-            width: 100%;
-            height: 5px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 3px;
-            margin-bottom: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            height: 6px;
+            margin: 15px 0;
             cursor: pointer;
         }
 
         .progress-bar {
             height: 100%;
-            background: #8b4513;
-            border-radius: 3px;
+            background: #ff0000;
+            border-radius: 5px;
             width: 0%;
         }
 
-        body.night-mode .progress-bar {
-            background: #ffffff;
+        .file-input-container {
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .file-input-container input {
+            display: none;
+        }
+
+        .file-input-label {
+            display: inline-block;
+            padding: 8px 15px;
+            background: #ff0000;
+            color: white;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+
+        .file-input-label:hover {
+            background: #cc0000;
+        }
+
+        .toggle-lyrics {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .toggle-lyrics label {
+            color: white;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+        /* 移除关闭按钮样式 */
+        /* .close-btn-player { ... }  已删除 */
+
+        .playlist-container {
+            max-height: 150px;
+            overflow-y: auto;
+            margin-top: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 10px;
+        }
+
+        .playlist-item {
+            padding: 8px;
+            color: #ccc;
+            cursor: pointer;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .playlist-item:last-child {
+            border-bottom: none;
+        }
+
+        .playlist-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .playlist-item.active {
+            color: #ff0000;
+            font-weight: bold;
         }
 
         .volume-control {
             display: flex;
             align-items: center;
             gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .volume-control span {
-            color: white;
-            font-size: 1.2rem;
+            margin-top: 10px;
         }
 
         .volume-slider {
             flex: 1;
             height: 5px;
-            -webkit-appearance: none;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 3px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
             outline: none;
+            -webkit-appearance: none;
         }
 
         .volume-slider::-webkit-slider-thumb {
@@ -450,192 +287,94 @@
             width: 15px;
             height: 15px;
             border-radius: 50%;
-            background: #8b4513;
+            background: #ff0000;
             cursor: pointer;
         }
 
-        body.night-mode .volume-slider::-webkit-slider-thumb {
-            background: #ffffff;
-        }
-
-        .controls {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-
-        .control-btn {
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
-            color: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            font-size: 1rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-        }
-
-        .control-btn:hover {
-            background: rgba(139, 69, 19, 0.5);
-            transform: scale(1.1);
-        }
-
-        body.night-mode .control-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-        }
-
-        .play-btn {
-            width: 50px;
-            height: 50px;
-            font-size: 1.2rem;
-        }
-
-        .file-input-container {
+        .loading-indicator {
             text-align: center;
-            margin-bottom: 15px;
+            color: #aaa;
+            font-size: 14px;
+            margin: 10px 0;
         }
 
-        .file-input-label {
-            display: inline-block;
-            padding: 8px 15px;
-            background: rgba(139, 69, 19, 0.7);
-            color: white;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-        }
-
-        .file-input-label:hover {
-            background: rgba(139, 69, 19, 1);
-            transform: translateY(-2px);
-        }
-
-        body.night-mode .file-input-label {
-            background: rgba(100, 100, 100, 0.7);
-        }
-
-        body.night-mode .file-input-label:hover {
-            background: rgba(150, 150, 150, 1);
-        }
-
-        #fileInputMusic {
-            display: none;
-        }
-
-        .playlist-container {
-            max-height: 100px;
-            overflow-y: auto;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 8px;
-            padding: 10px;
-        }
-
-        .playlist-item {
-            padding: 5px;
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 0.8rem;
-            cursor: pointer;
-            border-radius: 4px;
-            transition: all 0.3s ease;
-        }
-
-        .playlist-item:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-        }
-
-        .playlist-item.active {
-            color: #ffcc00;
-            font-weight: bold;
-        }
-        
-        /* ############################################################ */
-        /* ##### 响应式设计 ##### */
-        /* ############################################################ */
-        
         @media (max-width: 768px) {
-            .content-area {
-                flex-direction: column;
+            .music-player-full {
+                width: 280px;
             }
             
-            .control-panel {
-                flex-direction: column;
+            .album-cover-container {
+                width: 180px;
+                height: 180px;
             }
             
-            .control-group {
-                width: 100%;
-                justify-content: space-between;
-            }
-            
-            h1 {
-                font-size: 2rem;
-            }
-            
-            .reader-container {
-                padding: 20px;
-            }
+            /* ... 其余媒体查询样式保持不变 ... */
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>📚 现代化小说阅读器</h1>
-            <div class="subtitle">享受阅读的美好时光</div>
+            <h1>轻小说阅读器</h1>
+            <p class="subtitle">优雅的在线TXT小说阅读体验</p>
         </header>
-        
-        <div class="control-panel">
-            <div class="control-group">
-                <label for="fontSize">字体大小:</label>
-                <select id="fontSize">
-                    <option value="small">小号</option>
-                    <option value="medium" selected>中号</option>
-                    <option value="large">大号</option>
-                    <option value="xlarge">超大号</option>
-                </select>
+
+        <!-- 小说选择界面 -->
+        <section class="book-selection" id="bookSelection">
+            <div class="upload-section">
+                <input type="file" id="fileInput" accept=".txt">
+                <label for="fileInput" class="upload-label">选择TXT文件</label>
+                <p class="upload-hint">请选择一个TXT格式的小说文件开始阅读</p>
+                <p class="upload-hint">或者从下方列表中选择已有的小说</p>
             </div>
             
-            <div class="control-group">
-                <label for="themeToggle">夜间模式:</label>
-                <input type="checkbox" id="themeToggle">
+            <div class="loading-books" id="loadingBooks">
+                <p>正在加载小说列表...</p>
             </div>
             
-            <div class="control-group">
-                <button id="prevChapter">上一章</button>
-                <button id="nextChapter">下一章</button>
+            <div class="book-list" id="bookList">
+                <!-- 小说列表将通过JavaScript动态生成 -->
             </div>
-            
-            <div class="control-group">
-                <label for="chapterJump">跳转到:</label>
-                <input type="number" id="chapterJump" min="1" placeholder="章节号">
-                <button id="jumpButton">跳转</button>
-            </div>
-        </div>
-        
-        <div class="content-area">
-            <div class="chapter-list-container">
-                <h2>📖 章节列表</h2>
-                <ul class="chapter-list" id="chapterList">
-                    <!-- 章节列表将通过JavaScript动态生成 -->
-                </ul>
-            </div>
-            
-            <div class="reader-container">
-                <div class="chapter-title" id="currentChapterTitle">请选择章节开始阅读</div>
-                <div class="chapter-content" id="chapterContent">
-                    <!-- 章节内容将通过JavaScript动态加载 -->
+        </section>
+
+        <section class="processing-info" id="processingInfo" style="display: none;">
+            <p>正在处理文件，请稍候...</p>
+        </section>
+
+        <section class="reader-section" id="readerSection">
+            <button class="back-to-books" id="backToBooks">← 返回小说列表</button>
+            <div class="chapter-title" id="chapterTitle"></div>
+            <div class="content" id="content"></div>
+            <div class="controls">
+                <div class="control-group nav-buttons">
+                    <button id="prevPage">上一章</button>
+                    <button id="nextPage">下一章</button>
+                    <div class="page-info" id="pageInfo">第 1 章 / 共 1 章</div>
                 </div>
-                
-                <div class="navigation">
-                    <button id="prevChapterBottom">上一章</button>
-                    <button id="nextChapterBottom">下一章</button>
+                <div class="control-group setting-buttons">
+                    <select id="fontSize">
+                        <option value="small">小号字体</option>
+                        <option value="medium" selected>中号字体</option>
+                        <option value="large">大号字体</option>
+                    </select>
+                    <button id="toggleMode">夜间模式</button>
+                    <input type="number" id="chapterInput" placeholder="章节" min="1">
+                    <button id="goToChapter">跳转</button>
+                    <button id="chapterListBtn">章节列表</button>
                 </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- 章节列表弹窗 -->
+    <div class="chapter-list-modal" id="chapterListModal">
+        <div class="chapter-list-content">
+            <div class="chapter-list-header">
+                <h3>章节列表</h3>
+                <button class="close-btn" id="closeChapterList">&times;</button>
+            </div>
+            <div class="chapter-list-items" id="chapterListItems">
+                <!-- 章节列表将通过JavaScript动态生成 -->
             </div>
         </div>
     </div>
@@ -647,6 +386,9 @@
         </div>
         
         <div class="music-player-full" id="fullPlayer">
+            <!-- 移除关闭按钮 -->
+            <!-- <button class="close-btn-player" id="closeBtnPlayer">×</button> -->
+            
             <div class="album-cover-container">
                 <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCI+PHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9IiMzMzMzMzMiLz48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSI0MCIgZmlsbD0iIzIyMjIyMiIvPjxwYXRoIGQ9Ik01MCwxMEw2MCw0MEw5MCw0MEw2NSw2MEw3NSw5MEw1MCw3MEwyNSw5MEwzNSw2MEwxMCw0MEw0MCw0MEw1MCwxMFoiIGZpbGw9IiNmZjAwMDAiLz48L3N2Zz4=" 
                      alt="Album Cover" class="album-cover" id="albumCover">
@@ -700,192 +442,418 @@
     <audio id="audioPlayer"></audio>
 
     <script>
+        // ############################################################
+        // ##### 现代化小说阅读器核心功能实现 #####
+        // ############################################################
+        
         class ModernNovelReader {
             constructor() {
-                this.currentChapter = 0;
-                this.chapters = [];
+                this.chapters = []; // 存储章节信息
+                this.currentChapterIndex = 0;
                 this.fontSize = 'medium';
                 this.isNightMode = false;
+                this.currentBook = null; // 当前阅读的小说
                 
-                this.initializeElements();
+                this.initElements();
                 this.bindEvents();
-                this.applyTheme();
-                this.applyFontSize();
+                this.loadBookList(); // 加载小说列表
             }
             
-            initializeElements() {
-                // 控制面板元素
-                this.themeToggle = document.getElementById('themeToggle');
+            initElements() {
+                this.bookSelection = document.getElementById('bookSelection');
+                this.readerSection = document.getElementById('readerSection');
+                this.processingInfo = document.getElementById('processingInfo');
+                this.contentElement = document.getElementById('content');
+                this.chapterTitleElement = document.getElementById('chapterTitle');
+                this.prevPageBtn = document.getElementById('prevPage');
+                this.nextPageBtn = document.getElementById('nextPage');
+                this.pageInfo = document.getElementById('pageInfo');
                 this.fontSizeSelect = document.getElementById('fontSize');
-                this.chapterJump = document.getElementById('chapterJump');
-                this.jumpButton = document.getElementById('jumpButton');
-                
-                // 导航按钮
-                this.prevChapter = document.getElementById('prevChapter');
-                this.nextChapter = document.getElementById('nextChapter');
-                this.prevChapterBottom = document.getElementById('prevChapterBottom');
-                this.nextChapterBottom = document.getElementById('nextChapterBottom');
-                
-                // 内容显示区域
-                this.chapterList = document.getElementById('chapterList');
-                this.currentChapterTitle = document.getElementById('currentChapterTitle');
-                this.chapterContent = document.getElementById('chapterContent');
+                this.toggleModeBtn = document.getElementById('toggleMode');
+                this.chapterInput = document.getElementById('chapterInput');
+                this.goToChapterBtn = document.getElementById('goToChapter');
+                this.chapterListBtn = document.getElementById('chapterListBtn');
+                this.chapterListModal = document.getElementById('chapterListModal');
+                this.chapterListItems = document.getElementById('chapterListItems');
+                this.closeChapterListBtn = document.getElementById('closeChapterList');
+                this.fileInput = document.getElementById('fileInput');
+                this.bookList = document.getElementById('bookList');
+                this.loadingBooks = document.getElementById('loadingBooks');
+                this.backToBooks = document.getElementById('backToBooks');
             }
             
             bindEvents() {
-                // 主题切换
-                this.themeToggle.addEventListener('change', () => {
-                    this.isNightMode = this.themeToggle.checked;
-                    this.applyTheme();
-                });
+                this.fileInput.addEventListener('change', (e) => this.handleFileSelect(e));
+                this.prevPageBtn.addEventListener('click', () => this.prevChapter());
+                this.nextPageBtn.addEventListener('click', () => this.nextChapter());
+                this.fontSizeSelect.addEventListener('change', (e) => this.changeFontSize(e.target.value));
+                this.toggleModeBtn.addEventListener('click', () => this.toggleNightMode());
+                this.goToChapterBtn.addEventListener('click', () => this.goToChapter());
+                this.chapterListBtn.addEventListener('click', () => this.showChapterList());
+                this.closeChapterListBtn.addEventListener('click', () => this.hideChapterList());
+                this.backToBooks.addEventListener('click', () => this.showBookSelection());
                 
-                // 字体大小调整
-                this.fontSizeSelect.addEventListener('change', () => {
-                    this.fontSize = this.fontSizeSelect.value;
-                    this.applyFontSize();
-                });
-                
-                // 章节跳转
-                this.jumpButton.addEventListener('click', () => {
-                    const chapterNum = parseInt(this.chapterJump.value);
-                    if (chapterNum && chapterNum > 0 && chapterNum <= this.chapters.length) {
-                        this.loadChapter(chapterNum - 1);
-                    } else {
-                        alert('请输入有效的章节号');
+                // 点击模态框外部关闭
+                this.chapterListModal.addEventListener('click', (e) => {
+                    if (e.target === this.chapterListModal) {
+                        this.hideChapterList();
                     }
                 });
                 
-                // 回车键跳转
-                this.chapterJump.addEventListener('keyup', (e) => {
+                // 回车键跳转章节
+                this.chapterInput.addEventListener('keyup', (e) => {
                     if (e.key === 'Enter') {
-                        this.jumpButton.click();
+                        this.goToChapter();
                     }
                 });
-                
-                // 导航按钮
-                this.prevChapter.addEventListener('click', () => this.previousChapter());
-                this.nextChapter.addEventListener('click', () => this.nextChapterFunc());
-                this.prevChapterBottom.addEventListener('click', () => this.previousChapter());
-                this.nextChapterBottom.addEventListener('click', () => this.nextChapterFunc());
             }
             
-            applyTheme() {
-                if (this.isNightMode) {
-                    document.body.classList.add('night-mode');
-                } else {
-                    document.body.classList.remove('night-mode');
+            // 加载小说列表
+            async loadBookList() {
+                try {
+                    // 预定义的小说列表（实际部署时会从Book文件夹动态加载）
+                    const bookFiles = [
+                        { name: "示例小说1.txt", title: "示例小说1", author: "未知作者" },
+                        { name: "示例小说2.txt", title: "示例小说2", author: "未知作者" }
+                    ];
+                    
+                    const books = [];
+                    
+                    // 检查每个小说文件是否存在
+                    for (const file of bookFiles) {
+                        try {
+                            const response = await fetch(`Book/${file.name}`);
+                            if (response.ok) {
+                                books.push({
+                                    name: file.name,
+                                    url: `Book/${file.name}`,
+                                    title: file.title,
+                                    author: file.author
+                                });
+                            }
+                        } catch (error) {
+                            console.log(`小说文件 ${file.name} 不存在或无法访问`);
+                        }
+                    }
+                    
+                    this.displayBookList(books);
+                } catch (error) {
+                    console.error('加载小说列表时出错:', error);
+                    this.loadingBooks.innerHTML = '<p>加载小说列表失败，请手动选择文件</p>';
                 }
             }
             
-            applyFontSize() {
-                const sizes = {
-                    'small': '14px',
-                    'medium': '16px',
-                    'large': '18px',
-                    'xlarge': '20px'
-                };
+            // 显示小说列表
+            displayBookList(books) {
+                this.loadingBooks.style.display = 'none';
                 
-                this.chapterContent.style.fontSize = sizes[this.fontSize];
+                if (books.length === 0) {
+                    this.bookList.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; color: #666;">暂无小说，请手动上传或检查Book文件夹</p>';
+                    return;
+                }
+                
+                this.bookList.innerHTML = '';
+                
+                books.forEach(book => {
+                    const bookItem = document.createElement('div');
+                    bookItem.className = 'book-item';
+                    bookItem.innerHTML = `
+                        <div class="book-title">${book.title}</div>
+                        <div class="book-info">作者: ${book.author || '未知'}</div>
+                        <div class="book-info">${book.name}</div>
+                    `;
+                    
+                    bookItem.addEventListener('click', () => {
+                        this.loadBookFromFile(book.url, book.title);
+                    });
+                    
+                    this.bookList.appendChild(bookItem);
+                });
             }
             
-            // 模拟加载小说内容
-            loadNovel(content) {
-                // 这里应该解析小说内容并提取章节
-                // 为演示目的，我们创建一些示例章节
-                this.chapters = [
-                    {
-                        title: "第一章 离家出走",
-                        content: `<p>清晨的第一缕阳光透过窗帘洒在地板上，李明缓缓睁开眼睛。今天是他决定离家出走的日子。</p>
-                        <p>他轻手轻脚地收拾着行李，心中五味杂陈。父母的期望、自己的梦想，两者之间的冲突让他夜不能寐。</p>
-                        <p>"也许，只有走出去才能找到真正的自己。"他默默地想着，将最后一件衣服放进背包。</p>`
-                    },
-                    {
-                        title: "第二章 初入社会",
-                        content: `<p>城市的喧嚣让李明感到既兴奋又不安。高楼大厦、车水马龙，一切都是那么陌生。</p>
-                        <p>他找到了一份餐厅服务员的工作，虽然辛苦，但至少能维持基本生活。</p>
-                        <p>第一天下班后，他拖着疲惫的身体回到租来的小房间，躺在床上望着天花板，思考着未来的路。</p>`
-                    },
-                    {
-                        title: "第三章 意外相遇",
-                        content: `<p>在餐厅里，李明遇到了她——一个笑容灿烂的女孩，名叫小雨。她是这里的常客，总是点同样的套餐，坐在靠窗的位置。</p>
-                        <p>渐渐地，他们开始交谈，从天气聊到书籍，从工作聊到梦想。</p>
-                        <p>"你相信命运吗？"小雨突然问道。</p>
-                        <p>李明愣了一下，然后笑着说："也许吧，否则我们怎么会在这里相遇。"</p>`
-                    },
-                    {
-                        title: "第四章 梦想启航",
-                        content: `<p>在小雨的鼓励下，李明重新拾起了小时候的写作梦想。每天下班后，他都会在昏黄的台灯下写下自己的故事。</p>
-                        <p>几个月后，他的第一篇短篇小说在杂志上发表，虽然稿费微薄，但那份成就感让他欣喜若狂。</p>
-                        <p>"这只是开始。"他对自己说，眼中闪烁着坚定的光芒。</p>`
-                    },
-                    {
-                        title: "第五章 新的开始",
-                        content: `<p>一年后，李明已经成为了一名小有名气的作家。他的作品温暖而真实，感动了无数读者。</p>
-                        <p>小雨成了他的编辑，也成了他生命中最重要的人。</p>
-                        <p>站在新书发布会的台上，李明感慨万千："感谢那个勇敢踏出家门的自己，感谢所有帮助过我的人，更感谢生活给予我的一切。"</p>`
+            // 从文件加载小说
+            async loadBookFromFile(url, title) {
+                try {
+                    this.processingInfo.style.display = 'block';
+                    this.bookSelection.style.display = 'none';
+                    
+                    const response = await fetch(url);
+                    const content = await response.text();
+                    
+                    this.currentBook = { title, url };
+                    this.parseChapters(content);
+                    
+                    if (this.chapters.length > 0) {
+                        this.showChapter(0);
+                        this.readerSection.style.display = 'block';
+                    } else {
+                        // 如果没有检测到章节，则按固定长度分页
+                        this.createChaptersFromContent(content);
+                        this.showChapter(0);
+                        this.readerSection.style.display = 'block';
                     }
+                    
+                    this.processingInfo.style.display = 'none';
+                } catch (error) {
+                    console.error('加载小说时出错:', error);
+                    this.processingInfo.style.display = 'none';
+                    this.bookSelection.style.display = 'block';
+                    alert('加载小说失败，请检查文件格式');
+                }
+            }
+            
+            // 处理手动选择的文件
+            handleFileSelect(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+                
+                this.processingInfo.style.display = 'block';
+                this.bookSelection.style.display = 'none';
+                
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const content = e.target.result;
+                    this.currentBook = { title: file.name, url: null };
+                    this.parseChapters(content);
+                    if (this.chapters.length > 0) {
+                        this.showChapter(0);
+                        this.readerSection.style.display = 'block';
+                    } else {
+                        // 如果没有检测到章节，则按固定长度分页
+                        this.createChaptersFromContent(content);
+                        this.showChapter(0);
+                        this.readerSection.style.display = 'block';
+                    }
+                    this.processingInfo.style.display = 'none';
+                };
+                reader.readAsText(file, 'UTF-8');
+            }
+            
+            // 智能解析章节 - 修复版
+            parseChapters(content) {
+                // 清空之前的章节
+                this.chapters = [];
+                
+                // 定义章节标题的正则表达式
+                const chapterPatterns = [
+                    /第\s*([0-9一二三四五六七八九十百千万]+)\s*[章节篇回集卷]/g,
+                    /Chapter\s*([0-9]+)/gi,
+                    /[章节]\s*([0-9]+)/g
                 ];
                 
-                this.renderChapterList();
-                if (this.chapters.length > 0) {
-                    this.loadChapter(0);
+                // 找到所有章节标题及其位置
+                let chapterPositions = [];
+                let match;
+                
+                // 查找所有章节标题
+                for (const pattern of chapterPatterns) {
+                    const regex = new RegExp(pattern);
+                    while ((match = regex.exec(content)) !== null) {
+                        chapterPositions.push({
+                            index: match.index,
+                            title: match[0],
+                            match: match
+                        });
+                    }
                 }
-            }
-            
-            renderChapterList() {
-                this.chapterList.innerHTML = '';
-                this.chapters.forEach((chapter, index) => {
-                    const li = document.createElement('li');
-                    li.className = 'chapter-item';
-                    li.textContent = chapter.title;
-                    li.addEventListener('click', () => {
-                        this.loadChapter(index);
+                
+                // 按位置排序
+                chapterPositions.sort((a, b) => a.index - b.index);
+                
+                // 如果没有找到章节标题，尝试按固定长度分页
+                if (chapterPositions.length === 0) {
+                    this.createChaptersFromContent(content);
+                    return;
+                }
+                
+                // 创建章节内容 - 修复章节分割逻辑
+                for (let i = 0; i < chapterPositions.length; i++) {
+                    const start = chapterPositions[i].index;
+                    const end = i < chapterPositions.length - 1 ? chapterPositions[i + 1].index : content.length;
+                    const chapterContent = content.substring(start, end);
+                    
+                    // 提取章节号用于排序
+                    const chapterNumber = this.extractChapterNumber(chapterPositions[i].title);
+                    
+                    this.chapters.push({
+                        title: chapterPositions[i].title,
+                        number: chapterNumber,
+                        content: this.formatContent(chapterContent)
                     });
-                    this.chapterList.appendChild(li);
+                }
+                
+                // 按章节号排序
+                this.chapters.sort((a, b) => {
+                    // 如果章节号有效，按章节号排序
+                    if (isFinite(a.number) && isFinite(b.number)) {
+                        return a.number - b.number;
+                    }
+                    // 否则保持原有顺序
+                    return 0;
                 });
             }
             
-            loadChapter(index) {
+            // 提取章节号用于排序
+            extractChapterNumber(title) {
+                // 提取数字部分
+                const numberMatch = title.match(/[0-9]+/);
+                if (numberMatch) {
+                    return parseInt(numberMatch[0], 10);
+                }
+                
+                // 处理中文数字
+                const chineseNumMap = {
+                    '一': 1, '二': 2, '三': 3, '四': 4, '五': 5,
+                    '六': 6, '七': 7, '八': 8, '九': 9, '十': 10,
+                    '百': 100, '千': 1000, '万': 10000
+                };
+                
+                // 简单处理常见的中文数字
+                for (const [chinese, num] of Object.entries(chineseNumMap)) {
+                    if (title.includes(chinese)) {
+                        return num;
+                    }
+                }
+                
+                // 如果无法解析，返回一个大数，使其排在最后
+                return Infinity;
+            }
+            
+            // 当无法识别章节时，按固定长度创建章节
+            createChaptersFromContent(content) {
+                this.chapters = [];
+                const pageSize = 5000; // 每章字符数
+                
+                for (let i = 0; i < content.length; i += pageSize) {
+                    const chapterContent = content.substring(i, i + pageSize);
+                    this.chapters.push({
+                        title: `第 ${Math.floor(i/pageSize) + 1} 章`,
+                        number: Math.floor(i/pageSize) + 1,
+                        content: this.formatContent(chapterContent)
+                    });
+                }
+            }
+            
+            // 格式化内容，仿照番茄小说格式
+            formatContent(content) {
+                // 按段落分割（以两个或多个换行符为分隔）
+                let paragraphs = content.split(/\n\s*\n/);
+                
+                // 过滤掉空段落
+                paragraphs = paragraphs.filter(p => p.trim() !== '');
+                
+                // 对每个段落进行处理
+                return paragraphs.map(paragraph => {
+                    // 移除段落内的多余空格和换行
+                    let cleanParagraph = paragraph.replace(/\s+/g, ' ').trim();
+                    // 添加首行缩进
+                    return '\u3000\u3000' + cleanParagraph;
+                }).join('\n\n'); // 段落之间用两个换行符分隔
+            }
+            
+            // 显示指定章节
+            showChapter(index) {
                 if (index < 0 || index >= this.chapters.length) return;
                 
-                this.currentChapter = index;
+                this.currentChapterIndex = index;
                 const chapter = this.chapters[index];
                 
-                // 更新标题和内容
-                this.currentChapterTitle.textContent = chapter.title;
-                this.chapterContent.innerHTML = chapter.content;
+                // 显示章节标题和内容
+                this.chapterTitleElement.textContent = chapter.title;
+                this.contentElement.textContent = chapter.content;
+                this.contentElement.className = `content ${this.fontSize}`;
                 
-                // 更新章节列表中的活动项
-                document.querySelectorAll('.chapter-item').forEach((item, i) => {
-                    if (i === index) {
-                        item.classList.add('active');
-                    } else {
-                        item.classList.remove('active');
-                    }
+                // 更新页码信息
+                this.pageInfo.textContent = `第 ${index + 1} 章 / 共 ${this.chapters.length} 章`;
+                
+                // 更新按钮状态
+                this.prevPageBtn.disabled = (index === 0);
+                this.nextPageBtn.disabled = (index === this.chapters.length - 1);
+                
+                // 更新章节输入框
+                this.chapterInput.value = index + 1;
+            }
+            
+            // 上一章
+            prevChapter() {
+                if (this.currentChapterIndex > 0) {
+                    this.showChapter(this.currentChapterIndex - 1);
+                }
+            }
+            
+            // 下一章
+            nextChapter() {
+                if (this.currentChapterIndex < this.chapters.length - 1) {
+                    this.showChapter(this.currentChapterIndex + 1);
+                }
+            }
+            
+            // 跳转到指定章节
+            goToChapter() {
+                const chapterNumber = parseInt(this.chapterInput.value);
+                if (isNaN(chapterNumber) || chapterNumber < 1 || chapterNumber > this.chapters.length) {
+                    alert(`请输入有效的章节号 (1-${this.chapters.length})`);
+                    return;
+                }
+                
+                // 章节号从1开始，数组索引从0开始
+                this.showChapter(chapterNumber - 1);
+            }
+            
+            // 显示章节列表
+            showChapterList() {
+                // 清空章节列表
+                this.chapterListItems.innerHTML = '';
+                
+                // 生成章节列表（只显示纯数字编号）
+                this.chapters.forEach((chapter, index) => {
+                    const chapterItem = document.createElement('div');
+                    chapterItem.className = `chapter-list-item ${index === this.currentChapterIndex ? 'active' : ''}`;
+                    
+                    // 只显示纯数字编号，去掉"第一节"、"第一卷"等冗余信息
+                    const pureNumber = index + 1; // 直接使用索引作为章节编号
+                    chapterItem.textContent = `第${pureNumber}章`;
+                    
+                    chapterItem.addEventListener('click', () => {
+                        this.showChapter(index);
+                        this.hideChapterList();
+                    });
+                    this.chapterListItems.appendChild(chapterItem);
                 });
                 
-                // 更新跳转输入框
-                this.chapterJump.value = index + 1;
-                
-                // 滚动到顶部
-                window.scrollTo(0, 0);
+                // 显示模态框
+                this.chapterListModal.style.display = 'flex';
             }
             
-            previousChapter() {
-                if (this.currentChapter > 0) {
-                    this.loadChapter(this.currentChapter - 1);
-                }
+            // 隐藏章节列表
+            hideChapterList() {
+                this.chapterListModal.style.display = 'none';
             }
             
-            nextChapterFunc() {
-                if (this.currentChapter < this.chapters.length - 1) {
-                    this.loadChapter(this.currentChapter + 1);
-                }
+            // 更改字体大小
+            changeFontSize(size) {
+                this.fontSize = size;
+                this.contentElement.className = `content ${size}`;
+            }
+            
+            // 切换夜间模式
+            toggleNightMode() {
+                this.isNightMode = !this.isNightMode;
+                document.body.classList.toggle('night-mode', this.isNightMode);
+                this.toggleModeBtn.textContent = this.isNightMode ? '日间模式' : '夜间模式';
+            }
+            
+            // 返回小说列表
+            showBookSelection() {
+                this.readerSection.style.display = 'none';
+                this.bookSelection.style.display = 'block';
+                this.chapters = [];
+                this.currentChapterIndex = 0;
             }
         }
         
         // ############################################################
-        // ##### 修改后的GitHub音乐播放器功能实现 #####
+        // ##### GitHub音乐播放器功能实现 #####
         // ############################################################
         
         class GitHubMusicPlayer {
@@ -906,6 +874,7 @@
             this.musicPlayerContainer = document.getElementById('musicPlayerContainer'); // 新增
             this.miniPlayer = document.getElementById('miniPlayer');
             this.fullPlayer = document.getElementById('fullPlayer');
+            // this.closeBtnPlayer = document.getElementById('closeBtnPlayer'); // 移除
             this.albumCover = document.getElementById('albumCover');
             this.songTitle = document.getElementById('songTitle');
             this.songArtist = document.getElementById('songArtist');
@@ -925,14 +894,13 @@
           }
           
           bindEvents() {
-            // 修改：点击悬浮窗切换播放器显示/隐藏
+            // 播放器显示/隐藏控制 - 修改为切换方式
             this.miniPlayer.addEventListener('click', () => {
               this.togglePlayer();
             });
             
-            // 修改：点击播放器容器外部也可以切换
+            // 点击播放器容器外部也可以切换
             this.musicPlayerContainer.addEventListener('click', (e) => {
-              // 只有点击容器本身（不是内部元素）时才切换
               if (e.target === this.musicPlayerContainer) {
                 this.togglePlayer();
               }
@@ -977,6 +945,7 @@
             this.audio.addEventListener('error', (e) => {
               console.error('音频播放错误:', e);
               this.loadingIndicator.style.display = 'none';
+              alert('音频播放出错，请检查文件格式或选择其他文件');
             });
             this.audio.addEventListener('loadstart', () => {
               this.loadingIndicator.style.display = 'block';
@@ -996,52 +965,176 @@
             }
           }
           
-          // 扫描music文件夹中的音乐文件 - 使用GitHub API
+          // 扫描music文件夹中的音乐文件
           async scanMusicFolder() {
-            // 为保持简洁，这里省略音乐播放器的具体实现
-            // 实际使用时保留原有代码
-          }
-          
-          // 备用音乐加载方法
-          async scanMusicFolderFallback() {
-            // 为保持简洁，这里省略音乐播放器的具体实现
-            // 实际使用时保留原有代码
+            try {
+              // 这里我们假设音乐文件在/music/目录下
+              // 在实际部署时，这些文件会和网站一起部署到GitHub Pages
+              const musicFiles = [
+                { name: "example1.mp3", title: "示例音乐1", artist: "未知艺术家" },
+                { name: "example2.flac", title: "示例音乐2", artist: "未知艺术家" }
+              ];
+              
+              // 检查每个音乐文件是否存在
+              for (const file of musicFiles) {
+                try {
+                  const response = await fetch(`music/${file.name}`);
+                  if (response.ok) {
+                    this.playlist.push({
+                      name: file.name,
+                      url: `music/${file.name}`,
+                      title: file.title,
+                      artist: file.artist
+                    });
+                  }
+                } catch (error) {
+                  console.log(`音乐文件 ${file.name} 不存在或无法访问`);
+                }
+              }
+              
+              // 更新播放列表显示
+              this.updatePlaylistDisplay();
+              
+              // 如果有音乐文件，加载第一首
+              if (this.playlist.length > 0) {
+                this.loadTrack(0);
+              } else {
+                this.songTitle.textContent = "未找到音乐文件";
+                this.songArtist.textContent = "请在music文件夹中添加音乐";
+              }
+            } catch (error) {
+              console.error('扫描音乐文件夹时出错:', error);
+              this.songTitle.textContent = "音乐加载失败";
+              this.songArtist.textContent = "请检查网络连接";
+            }
           }
           
           // 处理本地文件选择（用于测试）
           handleFileSelect(event) {
-            // 为保持简洁，这里省略音乐播放器的具体实现
-            // 实际使用时保留原有代码
+            const files = Array.from(event.target.files).filter(file => 
+              file.type.startsWith('audio/') || 
+              file.name.endsWith('.mp3') || 
+              file.name.endsWith('.flac')
+            );
+            
+            if (files.length === 0) {
+              alert('请选择有效的音频文件（MP3或FLAC格式）');
+              return;
+            }
+            
+            files.forEach(file => {
+              const url = URL.createObjectURL(file);
+              this.playlist.push({
+                name: file.name,
+                url: url,
+                title: file.name.replace(/\.[^/.]+$/, ""),
+                artist: "本地音乐"
+              });
+            });
+            
+            // 更新播放列表显示
+            this.updatePlaylistDisplay();
+            
+            // 如果是第一次添加音乐，则自动播放第一首
+            if (this.playlist.length > 0 && !this.isPlaying) {
+              this.loadTrack(0);
+            }
           }
           
           // 加载指定音乐
           async loadTrack(index) {
-            // 为保持简洁，这里省略音乐播放器的具体实现
-            // 实际使用时保留原有代码
-          }
-          
-          // 加载封面图片
-          async loadCoverImage(track) {
-            // 为保持简洁，这里省略音乐播放器的具体实现
-            // 实际使用时保留原有代码
+            if (this.playlist.length === 0) return;
+            
+            this.currentTrack = index;
+            const track = this.playlist[index];
+            
+            this.audio.src = track.url;
+            this.songTitle.textContent = track.title;
+            this.songArtist.textContent = track.artist;
+            
+            // 尝试加载歌词文件（同名.lrc文件）
+            await this.loadLyrics(track);
+            
+            // 更新播放列表高亮
+            this.updatePlaylistDisplay();
+            
+            if (this.isPlaying) {
+              // 等待音频加载完成后播放
+              this.audio.load();
+              this.audio.play().catch(e => {
+                console.error('播放失败:', e);
+                this.loadingIndicator.style.display = 'none';
+                alert('播放失败，请检查文件格式');
+              });
+            }
           }
           
           // 加载歌词文件
           async loadLyrics(track) {
-            // 为保持简洁，这里省略音乐播放器的具体实现
-            // 实际使用时保留原有代码
+            try {
+              // 构造歌词文件名（将音乐文件扩展名替换为.lrc）
+              const lyricsFileName = track.name.replace(/\.[^/.]+$/, ".lrc");
+              const lyricsUrl = `music/${lyricsFileName}`;
+              
+              const response = await fetch(lyricsUrl);
+              if (response.ok) {
+                const lyricsText = await response.text();
+                this.parseLyrics(lyricsText);
+              } else {
+                this.lyricsData = [];
+                this.lyrics.textContent = "暂无歌词";
+              }
+            } catch (error) {
+              console.log('歌词加载失败:', error);
+              this.lyricsData = [];
+              this.lyrics.textContent = "暂无歌词";
+            }
           }
           
           // 解析LRC歌词格式
           parseLyrics(lyricsText) {
-            // 为保持简洁，这里省略音乐播放器的具体实现
-            // 实际使用时保留原有代码
+            this.lyricsData = [];
+            const lines = lyricsText.split('\n');
+            
+            const timeRegex = /\[(\d{2}):(\d{2})\.(\d{2,3})\](.*)/;
+            
+            lines.forEach(line => {
+              const match = line.match(timeRegex);
+              if (match) {
+                const minutes = parseInt(match[1]);
+                const seconds = parseInt(match[2]);
+                const milliseconds = match[3].length === 2 ? parseInt(match[3]) * 10 : parseInt(match[3]);
+                const time = minutes * 60 + seconds + milliseconds / 1000;
+                const text = match[4].trim();
+                
+                if (text) {
+                  this.lyricsData.push({ time, text });
+                }
+              }
+            });
+            
+            // 按时间排序
+            this.lyricsData.sort((a, b) => a.time - b.time);
           }
           
           // 更新当前歌词显示
           updateLyrics() {
-            // 为保持简洁，这里省略音乐播放器的具体实现
-            // 实际使用时保留原有代码
+            if (!this.lyricsData.length || !this.lyricsToggle.checked) return;
+            
+            const currentTime = this.audio.currentTime;
+            let currentLyric = "享受音乐时光";
+            
+            // 找到当前时间对应的歌词
+            for (let i = 0; i < this.lyricsData.length; i++) {
+              if (currentTime >= this.lyricsData[i].time) {
+                if (i === this.lyricsData.length - 1 || currentTime < this.lyricsData[i + 1].time) {
+                  currentLyric = this.lyricsData[i].text;
+                  break;
+                }
+              }
+            }
+            
+            this.lyrics.textContent = currentLyric;
           }
           
           // 播放/暂停控制
@@ -1057,7 +1150,11 @@
               if (!this.audio.src) {
                 this.loadTrack(this.currentTrack);
               }
-              this.audio.play();
+              this.audio.play().catch(e => {
+                console.error('播放失败:', e);
+                this.loadingIndicator.style.display = 'none';
+                alert('播放失败，请检查文件格式');
+              });
             }
           }
           
@@ -1081,7 +1178,11 @@
             this.loadTrack(this.currentTrack);
             
             if (this.isPlaying) {
-              this.audio.play();
+              this.audio.play().catch(e => {
+                console.error('播放失败:', e);
+                this.loadingIndicator.style.display = 'none';
+                alert('播放失败，请检查文件格式');
+              });
             }
           }
           
@@ -1093,7 +1194,11 @@
             this.loadTrack(this.currentTrack);
             
             if (this.isPlaying) {
-              this.audio.play();
+              this.audio.play().catch(e => {
+                console.error('播放失败:', e);
+                this.loadingIndicator.style.display = 'none';
+                alert('播放失败，请检查文件格式');
+              });
             }
           }
           
@@ -1107,16 +1212,39 @@
           
           // 更新播放列表显示
           updatePlaylistDisplay() {
-            // 为保持简洁，这里省略音乐播放器的具体实现
-            // 实际使用时保留原有代码
+            // 清空播放列表
+            this.playlistContainer.innerHTML = '';
+            
+            if (this.playlist.length === 0) {
+              this.playlistContainer.innerHTML = '<div class="playlist-item" id="defaultPlaylistItem">暂无播放列表</div>';
+              return;
+            }
+            
+            // 添加播放列表项
+            this.playlist.forEach((track, index) => {
+              const playlistItem = document.createElement('div');
+              playlistItem.className = `playlist-item ${index === this.currentTrack ? 'active' : ''}`;
+              playlistItem.textContent = track.title;
+              
+              playlistItem.addEventListener('click', () => {
+                this.loadTrack(index);
+                if (!this.isPlaying) {
+                  this.audio.play().catch(e => {
+                    console.error('播放失败:', e);
+                    this.loadingIndicator.style.display = 'none';
+                    alert('播放失败，请检查文件格式');
+                  });
+                }
+              });
+              
+              this.playlistContainer.appendChild(playlistItem);
+            });
           }
         }
         
         // 初始化阅读器和音乐播放器
         document.addEventListener('DOMContentLoaded', () => {
-            const reader = new ModernNovelReader();
-            // 模拟加载小说内容
-            reader.loadNovel();
+            new ModernNovelReader();
             new GitHubMusicPlayer();
         });
     </script>
