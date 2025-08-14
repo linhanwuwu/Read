@@ -1,0 +1,1734 @@
+<!-- ############################################################ -->
+<!-- ##### 现代化小说阅读器（支持GitHub自动加载小说） ##### -->
+<!-- ############################################################ -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>轻小说阅读器</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Serif SC', 'Microsoft YaHei', serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body.night-mode {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: #e0e0e0;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 30px 0;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 300;
+        }
+
+        .upload-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        body.night-mode .upload-section {
+            background: rgba(40, 40, 40, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .upload-label {
+            display: inline-block;
+            padding: 15px 40px;
+            background: linear-gradient(45deg, #ff6b6b, #ffa502);
+            color: white;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+            margin-bottom: 20px;
+        }
+
+        .upload-label:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+        }
+
+        .upload-label:active {
+            transform: translateY(1px);
+        }
+
+        .upload-hint {
+            color: #666;
+            font-size: 0.95rem;
+            margin-top: 15px;
+        }
+
+        body.night-mode .upload-hint {
+            color: #aaa;
+        }
+
+        .reader-section {
+            display: none;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        body.night-mode .reader-section {
+            background: rgba(40, 40, 40, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .content {
+            line-height: 1.8;
+            margin-bottom: 30px;
+            text-align: justify;
+            white-space: pre-wrap;
+            font-size: 1.1rem;
+            color: #333;
+        }
+
+        body.night-mode .content {
+            color: #e0e0e0;
+        }
+
+        .small {
+            font-size: 0.95rem;
+        }
+
+        .medium {
+            font-size: 1.1rem;
+        }
+
+        .large {
+            font-size: 1.3rem;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            padding: 20px;
+            background: rgba(245, 245, 245, 0.8);
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+
+        body.night-mode .controls {
+            background: rgba(50, 50, 50, 0.8);
+        }
+
+        .control-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .nav-buttons button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-buttons button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-buttons button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        body.night-mode .nav-buttons button:disabled {
+            background: #555;
+        }
+
+        .setting-buttons button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            background: #f0f0f0;
+            color: #333;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        body.night-mode .setting-buttons button {
+            background: #555;
+            color: #e0e0e0;
+        }
+
+        .setting-buttons button:hover {
+            background: #e0e0e0;
+        }
+
+        body.night-mode .setting-buttons button:hover {
+            background: #666;
+        }
+
+        select {
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            background: white;
+            color: #333;
+            font-family: inherit;
+        }
+
+        body.night-mode select {
+            background: #444;
+            color: #e0e0e0;
+            border: 1px solid #666;
+        }
+
+        input[type="number"] {
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            width: 80px;
+            background: white;
+            color: #333;
+            text-align: center;
+            font-family: inherit;
+        }
+
+        body.night-mode input[type="number"] {
+            background: #444;
+            color: #e0e0e0;
+            border: 1px solid #666;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .page-info {
+            font-size: 1rem;
+            color: #666;
+            font-weight: 500;
+        }
+
+        body.night-mode .page-info {
+            color: #aaa;
+        }
+
+        .chapter-title {
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin: 20px 0 30px 0;
+            color: #ff6b6b;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #ff6b6b;
+        }
+
+        body.night-mode .chapter-title {
+            color: #ff9d75;
+            border-bottom: 2px solid #ff9d75;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .processing-info {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        body.night-mode .processing-info {
+            background: rgba(40, 40, 40, 0.95);
+            color: #aaa;
+        }
+
+        .chapter-list-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .chapter-list-content {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+        }
+
+        body.night-mode .chapter-list-content {
+            background: rgba(40, 40, 40, 0.98);
+        }
+
+        .chapter-list-header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        body.night-mode .chapter-list-header {
+            border-bottom: 1px solid #444;
+        }
+
+        .chapter-list-items {
+            padding: 10px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .chapter-list-item {
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 1.05rem;
+        }
+
+        body.night-mode .chapter-list-item {
+            border-bottom: 1px solid #444;
+        }
+
+        .chapter-list-item:hover {
+            background-color: #f0f8ff;
+            transform: translateX(5px);
+        }
+
+        body.night-mode .chapter-list-item:hover {
+            background-color: #3a3a3a;
+        }
+
+        .chapter-list-item.active {
+            background-color: #fff5f5;
+            color: #ff6b6b;
+            font-weight: 600;
+            border-left: 4px solid #ff6b6b;
+        }
+
+        body.night-mode .chapter-list-item.active {
+            background-color: #4a3333;
+            color: #ff9d75;
+            border-left: 4px solid #ff9d75;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: white;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.2s ease;
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* 小说选择界面 */
+        .book-selection {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        body.night-mode .book-selection {
+            background: rgba(40, 40, 40, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .book-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .book-item {
+            background: rgba(240, 240, 240, 0.8);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid #ddd;
+        }
+
+        body.night-mode .book-item {
+            background: rgba(60, 60, 60, 0.8);
+            border: 1px solid #555;
+        }
+
+        .book-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            background: rgba(230, 230, 230, 0.9);
+        }
+
+        body.night-mode .book-item:hover {
+            background: rgba(70, 70, 70, 0.9);
+        }
+
+        .book-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        body.night-mode .book-title {
+            color: #e0e0e0;
+        }
+
+        .book-info {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        body.night-mode .book-info {
+            color: #aaa;
+        }
+
+        .loading-books {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        body.night-mode .loading-books {
+            color: #aaa;
+        }
+
+        .back-to-books {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: 500;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .back-to-books:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        /* 音乐播放器样式 */
+        .music-player-container {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            z-index: 1000;
+            font-family: Arial, sans-serif;
+        }
+
+        .music-player-mini {
+            width: 60px;
+            height: 60px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .music-player-mini:hover {
+            transform: scale(1.1);
+        }
+
+        .music-player-mini .play-icon {
+            color: white;
+            font-size: 24px;
+        }
+
+        .music-player-full {
+            width: 300px;
+            background: rgba(30, 30, 30, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            display: none;
+        }
+
+        .music-player-full.active {
+            display: block;
+        }
+
+        .album-cover-container {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 20px;
+            position: relative;
+        }
+
+        .album-cover {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+            animation: rotate 20s linear infinite;
+            animation-play-state: paused;
+        }
+
+        .music-player-full.playing .album-cover {
+            animation-play-state: running;
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .song-info {
+            text-align: center;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .song-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .song-artist {
+            font-size: 14px;
+            color: #aaa;
+        }
+
+        .lyrics-container {
+            height: 80px;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: red;
+            font-weight: bold;
+            opacity: 0.7;
+            display: none;
+        }
+
+        .lyrics-container.show {
+            display: block;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .control-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+        }
+
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .play-btn {
+            width: 50px;
+            height: 50px;
+            font-size: 24px;
+        }
+
+        .progress-container {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            height: 6px;
+            margin: 15px 0;
+            cursor: pointer;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: #ff0000;
+            border-radius: 5px;
+            width: 0%;
+        }
+
+        .file-input-container {
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .file-input-container input {
+            display: none;
+        }
+
+        .file-input-label {
+            display: inline-block;
+            padding: 8px 15px;
+            background: #ff0000;
+            color: white;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+
+        .file-input-label:hover {
+            background: #cc0000;
+        }
+
+        .toggle-lyrics {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .toggle-lyrics label {
+            color: white;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+        .close-btn-player {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .playlist-container {
+            max-height: 150px;
+            overflow-y: auto;
+            margin-top: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 10px;
+        }
+
+        .playlist-item {
+            padding: 8px;
+            color: #ccc;
+            cursor: pointer;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .playlist-item:last-child {
+            border-bottom: none;
+        }
+
+        .playlist-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .playlist-item.active {
+            color: #ff0000;
+            font-weight: bold;
+        }
+
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .volume-slider {
+            flex: 1;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: #ff0000;
+            cursor: pointer;
+        }
+
+        .loading-indicator {
+            text-align: center;
+            color: #aaa;
+            font-size: 14px;
+            margin: 10px 0;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .upload-section, .reader-section, .book-selection {
+                padding: 25px 20px;
+            }
+            
+            .controls {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .control-group {
+                width: 100%;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            
+            .chapter-title {
+                font-size: 1.5rem;
+            }
+            
+            .nav-buttons button, .setting-buttons button {
+                padding: 8px 15px;
+                font-size: 0.9rem;
+            }
+            
+            input[type="number"] {
+                width: 70px;
+            }
+            
+            .music-player-full {
+                width: 280px;
+            }
+            
+            .album-cover-container {
+                width: 180px;
+                height: 180px;
+            }
+            
+            .book-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>轻小说阅读器</h1>
+            <p class="subtitle">优雅的在线TXT小说阅读体验</p>
+        </header>
+
+        <!-- 小说选择界面 -->
+        <section class="book-selection" id="bookSelection">
+            <div class="upload-section">
+                <input type="file" id="fileInput" accept=".txt">
+                <label for="fileInput" class="upload-label">选择TXT文件</label>
+                <p class="upload-hint">请选择一个TXT格式的小说文件开始阅读</p>
+                <p class="upload-hint">或者从下方列表中选择已有的小说</p>
+            </div>
+            
+            <div class="loading-books" id="loadingBooks">
+                <p>正在加载小说列表...</p>
+            </div>
+            
+            <div class="book-list" id="bookList">
+                <!-- 小说列表将通过JavaScript动态生成 -->
+            </div>
+        </section>
+
+        <section class="processing-info" id="processingInfo" style="display: none;">
+            <p>正在处理文件，请稍候...</p>
+        </section>
+
+        <section class="reader-section" id="readerSection">
+            <button class="back-to-books" id="backToBooks">← 返回小说列表</button>
+            <div class="chapter-title" id="chapterTitle"></div>
+            <div class="content" id="content"></div>
+            <div class="controls">
+                <div class="control-group nav-buttons">
+                    <button id="prevPage">上一章</button>
+                    <button id="nextPage">下一章</button>
+                    <div class="page-info" id="pageInfo">第 1 章 / 共 1 章</div>
+                </div>
+                <div class="control-group setting-buttons">
+                    <select id="fontSize">
+                        <option value="small">小号字体</option>
+                        <option value="medium" selected>中号字体</option>
+                        <option value="large">大号字体</option>
+                    </select>
+                    <button id="toggleMode">夜间模式</button>
+                    <input type="number" id="chapterInput" placeholder="章节" min="1">
+                    <button id="goToChapter">跳转</button>
+                    <button id="chapterListBtn">章节列表</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- 章节列表弹窗 -->
+    <div class="chapter-list-modal" id="chapterListModal">
+        <div class="chapter-list-content">
+            <div class="chapter-list-header">
+                <h3>章节列表</h3>
+                <button class="close-btn" id="closeChapterList">&times;</button>
+            </div>
+            <div class="chapter-list-items" id="chapterListItems">
+                <!-- 章节列表将通过JavaScript动态生成 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 音乐播放器悬浮窗 -->
+    <div class="music-player-container">
+        <div class="music-player-mini" id="miniPlayer">
+            <div class="play-icon">♪</div>
+        </div>
+        
+        <div class="music-player-full" id="fullPlayer">
+            <button class="close-btn-player" id="closeBtnPlayer">×</button>
+            
+            <div class="album-cover-container">
+                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCI+PHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9IiMzMzMzMzMiLz48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSI0MCIgZmlsbD0iIzIyMjIyMiIvPjxwYXRoIGQ9Ik01MCwxMEw2MCw0MEw5MCw0MEw2NSw2MEw3NSw5MEw1MCw3MEwyNSw5MEwzNSw2MEwxMCw0MEw0MCw0MEw1MCwxMFoiIGZpbGw9IiNmZjAwMDAiLz48L3N2Zz4=" 
+                     alt="Album Cover" class="album-cover" id="albumCover">
+            </div>
+            
+            <div class="song-info">
+                <div class="song-title" id="songTitle">未选择歌曲</div>
+                <div class="song-artist" id="songArtist">请添加音乐文件</div>
+            </div>
+            
+            <div class="loading-indicator" id="loadingIndicator" style="display: none;">
+                正在加载音乐和歌词...
+            </div>
+            
+            <div class="lyrics-container" id="lyricsContainer">
+                <div class="lyrics" id="lyrics">享受音乐时光</div>
+            </div>
+            
+            <div class="toggle-lyrics">
+                <label>
+                    <input type="checkbox" id="lyricsToggle" checked> 显示歌词
+                </label>
+            </div>
+            
+            <div class="progress-container" id="progressContainer">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            
+            <div class="volume-control">
+                <span>🔊</span>
+                <input type="range" min="0" max="1" step="0.01" value="1" class="volume-slider" id="volumeSlider">
+            </div>
+            
+            <div class="controls">
+                <button class="control-btn" id="prevBtn">⏮</button>
+                <button class="control-btn play-btn" id="playBtn">▶</button>
+                <button class="control-btn" id="nextBtn">⏭</button>
+            </div>
+            
+            <div class="file-input-container">
+                <input type="file" id="fileInputMusic" accept=".mp3,.flac,audio/*" multiple>
+                <label for="fileInputMusic" class="file-input-label">添加音乐</label>
+            </div>
+            
+            <div class="playlist-container" id="playlistContainer">
+                <div class="playlist-item" id="defaultPlaylistItem">暂无播放列表</div>
+            </div>
+        </div>
+    </div>
+
+    <audio id="audioPlayer"></audio>
+
+    <script>
+        // ############################################################
+        // ##### 现代化小说阅读器核心功能实现 #####
+        // ############################################################
+        
+        class ModernNovelReader {
+            constructor() {
+                this.chapters = []; // 存储章节信息
+                this.currentChapterIndex = 0;
+                this.fontSize = 'medium';
+                this.isNightMode = false;
+                this.currentBook = null; // 当前阅读的小说
+                
+                this.initElements();
+                this.bindEvents();
+                this.loadBookList(); // 加载小说列表
+            }
+            
+            initElements() {
+                this.bookSelection = document.getElementById('bookSelection');
+                this.readerSection = document.getElementById('readerSection');
+                this.processingInfo = document.getElementById('processingInfo');
+                this.contentElement = document.getElementById('content');
+                this.chapterTitleElement = document.getElementById('chapterTitle');
+                this.prevPageBtn = document.getElementById('prevPage');
+                this.nextPageBtn = document.getElementById('nextPage');
+                this.pageInfo = document.getElementById('pageInfo');
+                this.fontSizeSelect = document.getElementById('fontSize');
+                this.toggleModeBtn = document.getElementById('toggleMode');
+                this.chapterInput = document.getElementById('chapterInput');
+                this.goToChapterBtn = document.getElementById('goToChapter');
+                this.chapterListBtn = document.getElementById('chapterListBtn');
+                this.chapterListModal = document.getElementById('chapterListModal');
+                this.chapterListItems = document.getElementById('chapterListItems');
+                this.closeChapterListBtn = document.getElementById('closeChapterList');
+                this.fileInput = document.getElementById('fileInput');
+                this.bookList = document.getElementById('bookList');
+                this.loadingBooks = document.getElementById('loadingBooks');
+                this.backToBooks = document.getElementById('backToBooks');
+            }
+            
+            bindEvents() {
+                this.fileInput.addEventListener('change', (e) => this.handleFileSelect(e));
+                this.prevPageBtn.addEventListener('click', () => this.prevChapter());
+                this.nextPageBtn.addEventListener('click', () => this.nextChapter());
+                this.fontSizeSelect.addEventListener('change', (e) => this.changeFontSize(e.target.value));
+                this.toggleModeBtn.addEventListener('click', () => this.toggleNightMode());
+                this.goToChapterBtn.addEventListener('click', () => this.goToChapter());
+                this.chapterListBtn.addEventListener('click', () => this.showChapterList());
+                this.closeChapterListBtn.addEventListener('click', () => this.hideChapterList());
+                this.backToBooks.addEventListener('click', () => this.showBookSelection());
+                
+                // 点击模态框外部关闭
+                this.chapterListModal.addEventListener('click', (e) => {
+                    if (e.target === this.chapterListModal) {
+                        this.hideChapterList();
+                    }
+                });
+                
+                // 回车键跳转章节
+                this.chapterInput.addEventListener('keyup', (e) => {
+                    if (e.key === 'Enter') {
+                        this.goToChapter();
+                    }
+                });
+            }
+            
+            // 加载小说列表
+            async loadBookList() {
+                try {
+                    // 预定义的小说列表（实际部署时会从Book文件夹动态加载）
+                    const bookFiles = [
+                        { name: "示例小说1.txt", title: "示例小说1", author: "未知作者" },
+                        { name: "示例小说2.txt", title: "示例小说2", author: "未知作者" }
+                    ];
+                    
+                    const books = [];
+                    
+                    // 检查每个小说文件是否存在
+                    for (const file of bookFiles) {
+                        try {
+                            const response = await fetch(`Book/${file.name}`);
+                            if (response.ok) {
+                                books.push({
+                                    name: file.name,
+                                    url: `Book/${file.name}`,
+                                    title: file.title,
+                                    author: file.author
+                                });
+                            }
+                        } catch (error) {
+                            console.log(`小说文件 ${file.name} 不存在或无法访问`);
+                        }
+                    }
+                    
+                    this.displayBookList(books);
+                } catch (error) {
+                    console.error('加载小说列表时出错:', error);
+                    this.loadingBooks.innerHTML = '<p>加载小说列表失败，请手动选择文件</p>';
+                }
+            }
+            
+            // 显示小说列表
+            displayBookList(books) {
+                this.loadingBooks.style.display = 'none';
+                
+                if (books.length === 0) {
+                    this.bookList.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; color: #666;">暂无小说，请手动上传或检查Book文件夹</p>';
+                    return;
+                }
+                
+                this.bookList.innerHTML = '';
+                
+                books.forEach(book => {
+                    const bookItem = document.createElement('div');
+                    bookItem.className = 'book-item';
+                    bookItem.innerHTML = `
+                        <div class="book-title">${book.title}</div>
+                        <div class="book-info">作者: ${book.author || '未知'}</div>
+                        <div class="book-info">${book.name}</div>
+                    `;
+                    
+                    bookItem.addEventListener('click', () => {
+                        this.loadBookFromFile(book.url, book.title);
+                    });
+                    
+                    this.bookList.appendChild(bookItem);
+                });
+            }
+            
+            // 从文件加载小说
+            async loadBookFromFile(url, title) {
+                try {
+                    this.processingInfo.style.display = 'block';
+                    this.bookSelection.style.display = 'none';
+                    
+                    const response = await fetch(url);
+                    const content = await response.text();
+                    
+                    this.currentBook = { title, url };
+                    this.parseChapters(content);
+                    
+                    if (this.chapters.length > 0) {
+                        this.showChapter(0);
+                        this.readerSection.style.display = 'block';
+                    } else {
+                        // 如果没有检测到章节，则按固定长度分页
+                        this.createChaptersFromContent(content);
+                        this.showChapter(0);
+                        this.readerSection.style.display = 'block';
+                    }
+                    
+                    this.processingInfo.style.display = 'none';
+                } catch (error) {
+                    console.error('加载小说时出错:', error);
+                    this.processingInfo.style.display = 'none';
+                    this.bookSelection.style.display = 'block';
+                    alert('加载小说失败，请检查文件格式');
+                }
+            }
+            
+            // 处理手动选择的文件
+            handleFileSelect(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+                
+                this.processingInfo.style.display = 'block';
+                this.bookSelection.style.display = 'none';
+                
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const content = e.target.result;
+                    this.currentBook = { title: file.name, url: null };
+                    this.parseChapters(content);
+                    if (this.chapters.length > 0) {
+                        this.showChapter(0);
+                        this.readerSection.style.display = 'block';
+                    } else {
+                        // 如果没有检测到章节，则按固定长度分页
+                        this.createChaptersFromContent(content);
+                        this.showChapter(0);
+                        this.readerSection.style.display = 'block';
+                    }
+                    this.processingInfo.style.display = 'none';
+                };
+                reader.readAsText(file, 'UTF-8');
+            }
+            
+            // 智能解析章节
+            parseChapters(content) {
+                // 清空之前的章节
+                this.chapters = [];
+                
+                // 定义章节标题的正则表达式
+                const chapterPatterns = [
+                    /第\s*([0-9一二三四五六七八九十百千万]+)\s*[章节篇回集卷]/g,
+                    /Chapter\s*([0-9]+)/gi,
+                    /[章节]\s*([0-9]+)/g
+                ];
+                
+                let matches = [];
+                let match;
+                
+                // 查找所有章节标题
+                for (const pattern of chapterPatterns) {
+                    while ((match = pattern.exec(content)) !== null) {
+                        matches.push({
+                            index: match.index,
+                            title: match[0],
+                            number: this.parseChapterNumber(match[1])
+                        });
+                    }
+                }
+                
+                // 按位置排序
+                matches.sort((a, b) => a.index - b.index);
+                
+                // 如果没有找到章节标题，尝试按固定长度分页
+                if (matches.length === 0) {
+                    return;
+                }
+                
+                // 创建章节内容
+                for (let i = 0; i < matches.length; i++) {
+                    const start = matches[i].index;
+                    const end = i < matches.length - 1 ? matches[i + 1].index : content.length;
+                    const chapterContent = content.substring(start, end).trim();
+                    
+                    this.chapters.push({
+                        title: matches[i].title,
+                        number: matches[i].number,
+                        content: this.formatContent(chapterContent)
+                    });
+                }
+                
+                // 按章节号排序
+                this.chapters.sort((a, b) => a.number - b.number);
+            }
+            
+            // 解析章节号（支持中文数字）
+            parseChapterNumber(str) {
+                // 尝试直接转换为数字
+                const num = parseInt(str, 10);
+                if (!isNaN(num)) {
+                    return num;
+                }
+                
+                // 处理中文数字
+                const chineseNumMap = {
+                    '一': 1, '二': 2, '三': 3, '四': 4, '五': 5,
+                    '六': 6, '七': 7, '八': 8, '九': 9, '十': 10,
+                    '百': 100, '千': 1000, '万': 10000
+                };
+                
+                // 简单处理常见的中文数字
+                if (chineseNumMap[str]) {
+                    return chineseNumMap[str];
+                }
+                
+                // 如果无法解析，返回一个大数，使其排在最后
+                return Infinity;
+            }
+            
+            // 当无法识别章节时，按固定长度创建章节
+            createChaptersFromContent(content) {
+                this.chapters = [];
+                const pageSize = 5000; // 每章字符数
+                
+                for (let i = 0; i < content.length; i += pageSize) {
+                    const chapterContent = content.substring(i, i + pageSize);
+                    this.chapters.push({
+                        title: `第 ${Math.floor(i/pageSize) + 1} 章`,
+                        number: Math.floor(i/pageSize) + 1,
+                        content: this.formatContent(chapterContent)
+                    });
+                }
+            }
+            
+            // 格式化内容，仿照番茄小说格式
+            formatContent(content) {
+                // 移除内容开头的章节标题（如果存在）
+                const titlePattern = /^(第\s*[0-9一二三四五六七八九十百千万]+\s*[章节篇回集卷].*?)(?:\n|$)/;
+                content = content.replace(titlePattern, '').trim();
+                
+                // 按段落分割（以两个或多个换行符为分隔）
+                let paragraphs = content.split(/\n\s*\n/);
+                
+                // 过滤掉空段落
+                paragraphs = paragraphs.filter(p => p.trim() !== '');
+                
+                // 对每个段落进行处理
+                return paragraphs.map(paragraph => {
+                    // 移除段落内的多余空格和换行
+                    let cleanParagraph = paragraph.replace(/\s+/g, ' ').trim();
+                    return cleanParagraph;
+                }).join('\n\n'); // 段落之间用两个换行符分隔
+            }
+            
+            // 显示指定章节
+            showChapter(index) {
+                if (index < 0 || index >= this.chapters.length) return;
+                
+                this.currentChapterIndex = index;
+                const chapter = this.chapters[index];
+                
+                // 显示章节标题和内容
+                this.chapterTitleElement.textContent = chapter.title;
+                this.contentElement.textContent = chapter.content;
+                this.contentElement.className = `content ${this.fontSize}`;
+                
+                // 更新页码信息
+                this.pageInfo.textContent = `第 ${index + 1} 章 / 共 ${this.chapters.length} 章`;
+                
+                // 更新按钮状态
+                this.prevPageBtn.disabled = (index === 0);
+                this.nextPageBtn.disabled = (index === this.chapters.length - 1);
+                
+                // 更新章节输入框
+                this.chapterInput.value = index + 1;
+            }
+            
+            // 上一章
+            prevChapter() {
+                if (this.currentChapterIndex > 0) {
+                    this.showChapter(this.currentChapterIndex - 1);
+                }
+            }
+            
+            // 下一章
+            nextChapter() {
+                if (this.currentChapterIndex < this.chapters.length - 1) {
+                    this.showChapter(this.currentChapterIndex + 1);
+                }
+            }
+            
+            // 跳转到指定章节
+            goToChapter() {
+                const chapterNumber = parseInt(this.chapterInput.value);
+                if (isNaN(chapterNumber) || chapterNumber < 1 || chapterNumber > this.chapters.length) {
+                    alert(`请输入有效的章节号 (1-${this.chapters.length})`);
+                    return;
+                }
+                
+                // 章节号从1开始，数组索引从0开始
+                this.showChapter(chapterNumber - 1);
+            }
+            
+            // 显示章节列表
+            showChapterList() {
+                // 清空章节列表
+                this.chapterListItems.innerHTML = '';
+                
+                // 生成章节列表（只显示纯数字编号）
+                this.chapters.forEach((chapter, index) => {
+                    const chapterItem = document.createElement('div');
+                    chapterItem.className = `chapter-list-item ${index === this.currentChapterIndex ? 'active' : ''}`;
+                    
+                    // 只显示纯数字编号，去掉"第一节"、"第一卷"等冗余信息
+                    const pureNumber = index + 1; // 直接使用索引作为章节编号
+                    chapterItem.textContent = `第${pureNumber}章`;
+                    
+                    chapterItem.addEventListener('click', () => {
+                        this.showChapter(index);
+                        this.hideChapterList();
+                    });
+                    this.chapterListItems.appendChild(chapterItem);
+                });
+                
+                // 显示模态框
+                this.chapterListModal.style.display = 'flex';
+            }
+            
+            // 隐藏章节列表
+            hideChapterList() {
+                this.chapterListModal.style.display = 'none';
+            }
+            
+            // 更改字体大小
+            changeFontSize(size) {
+                this.fontSize = size;
+                this.contentElement.className = `content ${size}`;
+            }
+            
+            // 切换夜间模式
+            toggleNightMode() {
+                this.isNightMode = !this.isNightMode;
+                document.body.classList.toggle('night-mode', this.isNightMode);
+                this.toggleModeBtn.textContent = this.isNightMode ? '日间模式' : '夜间模式';
+            }
+            
+            // 返回小说列表
+            showBookSelection() {
+                this.readerSection.style.display = 'none';
+                this.bookSelection.style.display = 'block';
+                this.chapters = [];
+                this.currentChapterIndex = 0;
+            }
+        }
+        
+        // ############################################################
+        // ##### GitHub音乐播放器功能实现 #####
+        // ############################################################
+        
+        class GitHubMusicPlayer {
+          constructor() {
+            this.audio = document.getElementById('audioPlayer');
+            this.playlist = [];
+            this.currentTrack = 0;
+            this.isPlaying = false;
+            this.lyricsData = [];
+            
+            this.initializeElements();
+            this.bindEvents();
+            this.scanMusicFolder();
+          }
+          
+          initializeElements() {
+            this.miniPlayer = document.getElementById('miniPlayer');
+            this.fullPlayer = document.getElementById('fullPlayer');
+            this.closeBtnPlayer = document.getElementById('closeBtnPlayer');
+            this.albumCover = document.getElementById('albumCover');
+            this.songTitle = document.getElementById('songTitle');
+            this.songArtist = document.getElementById('songArtist');
+            this.lyricsContainer = document.getElementById('lyricsContainer');
+            this.lyrics = document.getElementById('lyrics');
+            this.lyricsToggle = document.getElementById('lyricsToggle');
+            this.progressContainer = document.getElementById('progressContainer');
+            this.progressBar = document.getElementById('progressBar');
+            this.prevBtn = document.getElementById('prevBtn');
+            this.playBtn = document.getElementById('playBtn');
+            this.nextBtn = document.getElementById('nextBtn');
+            this.fileInputMusic = document.getElementById('fileInputMusic');
+            this.playlistContainer = document.getElementById('playlistContainer');
+            this.defaultPlaylistItem = document.getElementById('defaultPlaylistItem');
+            this.volumeSlider = document.getElementById('volumeSlider');
+            this.loadingIndicator = document.getElementById('loadingIndicator');
+          }
+          
+          bindEvents() {
+            // 播放器显示/隐藏控制
+            this.miniPlayer.addEventListener('click', () => {
+              this.fullPlayer.classList.add('active');
+            });
+            
+            this.closeBtnPlayer.addEventListener('click', () => {
+              this.fullPlayer.classList.remove('active');
+            });
+            
+            // 播放控制
+            this.playBtn.addEventListener('click', () => this.togglePlay());
+            this.prevBtn.addEventListener('click', () => this.prevTrack());
+            this.nextBtn.addEventListener('click', () => this.nextTrack());
+            
+            // 歌词显示切换
+            this.lyricsToggle.addEventListener('change', () => {
+              if (this.lyricsToggle.checked) {
+                this.lyricsContainer.classList.add('show');
+              } else {
+                this.lyricsContainer.classList.remove('show');
+              }
+            });
+            
+            // 进度条控制
+            this.progressContainer.addEventListener('click', (e) => {
+              const percent = e.offsetX / this.progressContainer.offsetWidth;
+              this.audio.currentTime = percent * this.audio.duration;
+            });
+            
+            // 文件选择（用于本地测试）
+            this.fileInputMusic.addEventListener('change', (e) => {
+              this.handleFileSelect(e);
+            });
+            
+            // 音量控制
+            this.volumeSlider.addEventListener('input', (e) => {
+              this.audio.volume = e.target.value;
+            });
+            
+            // 音频事件
+            this.audio.addEventListener('timeupdate', () => this.updateProgress());
+            this.audio.addEventListener('timeupdate', () => this.updateLyrics());
+            this.audio.addEventListener('ended', () => this.nextTrack());
+            this.audio.addEventListener('play', () => this.setPlayingState(true));
+            this.audio.addEventListener('pause', () => this.setPlayingState(false));
+            this.audio.addEventListener('error', (e) => {
+              console.error('音频播放错误:', e);
+              this.loadingIndicator.style.display = 'none';
+              alert('音频播放出错，请检查文件格式或选择其他文件');
+            });
+            this.audio.addEventListener('loadstart', () => {
+              this.loadingIndicator.style.display = 'block';
+            });
+            this.audio.addEventListener('canplay', () => {
+              this.loadingIndicator.style.display = 'none';
+            });
+          }
+          
+          // 扫描music文件夹中的音乐文件
+          async scanMusicFolder() {
+            try {
+              // 这里我们假设音乐文件在/music/目录下
+              // 在实际部署时，这些文件会和网站一起部署到GitHub Pages
+              const musicFiles = [
+                { name: "example1.mp3", title: "示例音乐1", artist: "未知艺术家" },
+                { name: "example2.flac", title: "示例音乐2", artist: "未知艺术家" }
+              ];
+              
+              // 检查每个音乐文件是否存在
+              for (const file of musicFiles) {
+                try {
+                  const response = await fetch(`music/${file.name}`);
+                  if (response.ok) {
+                    this.playlist.push({
+                      name: file.name,
+                      url: `music/${file.name}`,
+                      title: file.title,
+                      artist: file.artist
+                    });
+                  }
+                } catch (error) {
+                  console.log(`音乐文件 ${file.name} 不存在或无法访问`);
+                }
+              }
+              
+              // 更新播放列表显示
+              this.updatePlaylistDisplay();
+              
+              // 如果有音乐文件，加载第一首
+              if (this.playlist.length > 0) {
+                this.loadTrack(0);
+              } else {
+                this.songTitle.textContent = "未找到音乐文件";
+                this.songArtist.textContent = "请在music文件夹中添加音乐";
+              }
+            } catch (error) {
+              console.error('扫描音乐文件夹时出错:', error);
+              this.songTitle.textContent = "音乐加载失败";
+              this.songArtist.textContent = "请检查网络连接";
+            }
+          }
+          
+          // 处理本地文件选择（用于测试）
+          handleFileSelect(event) {
+            const files = Array.from(event.target.files).filter(file => 
+              file.type.startsWith('audio/') || 
+              file.name.endsWith('.mp3') || 
+              file.name.endsWith('.flac')
+            );
+            
+            if (files.length === 0) {
+              alert('请选择有效的音频文件（MP3或FLAC格式）');
+              return;
+            }
+            
+            files.forEach(file => {
+              const url = URL.createObjectURL(file);
+              this.playlist.push({
+                name: file.name,
+                url: url,
+                title: file.name.replace(/\.[^/.]+$/, ""),
+                artist: "本地音乐"
+              });
+            });
+            
+            // 更新播放列表显示
+            this.updatePlaylistDisplay();
+            
+            // 如果是第一次添加音乐，则自动播放第一首
+            if (this.playlist.length > 0 && !this.isPlaying) {
+              this.loadTrack(0);
+            }
+          }
+          
+          // 加载指定音乐
+          async loadTrack(index) {
+            if (this.playlist.length === 0) return;
+            
+            this.currentTrack = index;
+            const track = this.playlist[index];
+            
+            this.audio.src = track.url;
+            this.songTitle.textContent = track.title;
+            this.songArtist.textContent = track.artist;
+            
+            // 尝试加载歌词文件（同名.lrc文件）
+            await this.loadLyrics(track);
+            
+            // 更新播放列表高亮
+            this.updatePlaylistDisplay();
+            
+            if (this.isPlaying) {
+              // 等待音频加载完成后播放
+              this.audio.load();
+              this.audio.play().catch(e => {
+                console.error('播放失败:', e);
+                this.loadingIndicator.style.display = 'none';
+                alert('播放失败，请检查文件格式');
+              });
+            }
+          }
+          
+          // 加载歌词文件
+          async loadLyrics(track) {
+            try {
+              // 构造歌词文件名（将音乐文件扩展名替换为.lrc）
+              const lyricsFileName = track.name.replace(/\.[^/.]+$/, ".lrc");
+              const lyricsUrl = `music/${lyricsFileName}`;
+              
+              const response = await fetch(lyricsUrl);
+              if (response.ok) {
+                const lyricsText = await response.text();
+                this.parseLyrics(lyricsText);
+              } else {
+                this.lyricsData = [];
+                this.lyrics.textContent = "暂无歌词";
+              }
+            } catch (error) {
+              console.log('歌词加载失败:', error);
+              this.lyricsData = [];
+              this.lyrics.textContent = "暂无歌词";
+            }
+          }
+          
+          // 解析LRC歌词格式
+          parseLyrics(lyricsText) {
+            this.lyricsData = [];
+            const lines = lyricsText.split('\n');
+            
+            const timeRegex = /\[(\d{2}):(\d{2})\.(\d{2,3})\](.*)/;
+            
+            lines.forEach(line => {
+              const match = line.match(timeRegex);
+              if (match) {
+                const minutes = parseInt(match[1]);
+                const seconds = parseInt(match[2]);
+                const milliseconds = match[3].length === 2 ? parseInt(match[3]) * 10 : parseInt(match[3]);
+                const time = minutes * 60 + seconds + milliseconds / 1000;
+                const text = match[4].trim();
+                
+                if (text) {
+                  this.lyricsData.push({ time, text });
+                }
+              }
+            });
+            
+            // 按时间排序
+            this.lyricsData.sort((a, b) => a.time - b.time);
+          }
+          
+          // 更新当前歌词显示
+          updateLyrics() {
+            if (!this.lyricsData.length || !this.lyricsToggle.checked) return;
+            
+            const currentTime = this.audio.currentTime;
+            let currentLyric = "享受音乐时光";
+            
+            // 找到当前时间对应的歌词
+            for (let i = 0; i < this.lyricsData.length; i++) {
+              if (currentTime >= this.lyricsData[i].time) {
+                if (i === this.lyricsData.length - 1 || currentTime < this.lyricsData[i + 1].time) {
+                  currentLyric = this.lyricsData[i].text;
+                  break;
+                }
+              }
+            }
+            
+            this.lyrics.textContent = currentLyric;
+          }
+          
+          // 播放/暂停控制
+          togglePlay() {
+            if (this.playlist.length === 0) {
+              alert('请先添加音乐文件');
+              return;
+            }
+            
+            if (this.isPlaying) {
+              this.audio.pause();
+            } else {
+              if (!this.audio.src) {
+                this.loadTrack(this.currentTrack);
+              }
+              this.audio.play().catch(e => {
+                console.error('播放失败:', e);
+                this.loadingIndicator.style.display = 'none';
+                alert('播放失败，请检查文件格式');
+              });
+            }
+          }
+          
+          // 设置播放状态
+          setPlayingState(playing) {
+            this.isPlaying = playing;
+            this.playBtn.textContent = playing ? '❚❚' : '▶';
+            
+            if (playing) {
+              this.fullPlayer.classList.add('playing');
+            } else {
+              this.fullPlayer.classList.remove('playing');
+            }
+          }
+          
+          // 上一首
+          prevTrack() {
+            if (this.playlist.length === 0) return;
+            
+            this.currentTrack = (this.currentTrack - 1 + this.playlist.length) % this.playlist.length;
+            this.loadTrack(this.currentTrack);
+            
+            if (this.isPlaying) {
+              this.audio.play().catch(e => {
+                console.error('播放失败:', e);
+                this.loadingIndicator.style.display = 'none';
+                alert('播放失败，请检查文件格式');
+              });
+            }
+          }
+          
+          // 下一首
+          nextTrack() {
+            if (this.playlist.length === 0) return;
+            
+            this.currentTrack = (this.currentTrack + 1) % this.playlist.length;
+            this.loadTrack(this.currentTrack);
+            
+            if (this.isPlaying) {
+              this.audio.play().catch(e => {
+                console.error('播放失败:', e);
+                this.loadingIndicator.style.display = 'none';
+                alert('播放失败，请检查文件格式');
+              });
+            }
+          }
+          
+          // 更新进度条
+          updateProgress() {
+            if (this.audio.duration) {
+              const percent = (this.audio.currentTime / this.audio.duration) * 100;
+              this.progressBar.style.width = `${percent}%`;
+            }
+          }
+          
+          // 更新播放列表显示
+          updatePlaylistDisplay() {
+            // 清空播放列表
+            this.playlistContainer.innerHTML = '';
+            
+            if (this.playlist.length === 0) {
+              this.playlistContainer.innerHTML = '<div class="playlist-item" id="defaultPlaylistItem">暂无播放列表</div>';
+              return;
+            }
+            
+            // 添加播放列表项
+            this.playlist.forEach((track, index) => {
+              const playlistItem = document.createElement('div');
+              playlistItem.className = `playlist-item ${index === this.currentTrack ? 'active' : ''}`;
+              playlistItem.textContent = track.title;
+              
+              playlistItem.addEventListener('click', () => {
+                this.loadTrack(index);
+                if (!this.isPlaying) {
+                  this.audio.play().catch(e => {
+                    console.error('播放失败:', e);
+                    this.loadingIndicator.style.display = 'none';
+                    alert('播放失败，请检查文件格式');
+                  });
+                }
+              });
+              
+              this.playlistContainer.appendChild(playlistItem);
+            });
+          }
+        }
+        
+        // 初始化阅读器和音乐播放器
+        document.addEventListener('DOMContentLoaded', () => {
+            new ModernNovelReader();
+            new GitHubMusicPlayer();
+        });
+    </script>
+</body>
+</html>
